@@ -1,0 +1,2008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="color-scheme" content="light">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Peace Homes Broker Portal</title>
+<!-- =====================================================================
+     BRAND SETTINGS: edit these values to restyle the whole portal.
+     You can also click the palette button in the top bar to try colours
+     live, then use "Download HTML with these settings".
+     ===================================================================== -->
+<style id="brand-settings">
+/*BRAND-SETTINGS-START*/
+:root{
+  /* Logo */
+  --logo-bg:#FFFFFF;          /* background behind the logo */
+  --logo-color:#0E1A2E;       /* colour of the name text next to the logo */
+  --logo-height:36px;         /* logo image height */
+
+  /* Brand colours */
+  --brand-primary:#C8372D;    /* buttons, active states, key figures */
+  --brand-navy:#0E1A2E;       /* dark brand colour: table headers, toasts, gradients */
+  --brand-navy-2:#1F3B73;     /* second colour of dark gradients */
+  --brand-gold:#F2C14E;       /* highlight buttons and accents */
+
+  /* Page surfaces */
+  --page-bg:#F3F5FA;          /* page background */
+  --sidebar-bg:#0E1A2E;       /* desktop sidebar */
+
+  /* Section banners: white text sits on these, so keep them dark */
+  --banner-home:#1F3B73;
+  --banner-pending:#2F5FD0;
+  --banner-closed:#0F7A64;
+  --banner-payments:#A0521A;
+  --banner-inventory:#7A3592;
+  --banner-profile:#2B3F63;
+
+  /* Fonts */
+  --font-heading:"Bricolage Grotesque","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --font-text:"Public Sans","Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+/*BRAND-SETTINGS-END*/
+</style>
+<script>
+/* LOGO: set "logoSrc" to an image URL or a data:image/... string.
+   Leave it empty to show the built-in house mark. */
+/*BRAND-CONFIG-START*/
+window.BRAND = {
+  "logoSrc": "",
+  "name": "Peace Homes",
+  "tagline": "Development",
+  "showText": true
+};
+/*BRAND-CONFIG-END*/
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============ Tokens ============ */
+:root{
+  --bg:#F2F2F0; --surface:#FFFFFF; --surface-2:#EAEAE7;
+  --ink:#17181A; --muted:#55575C; --line:#17181A; --line-soft:#D8D8D4;
+  --shadow:#17181A;
+  --accent:#B3312A; --accent-ink:#FFFFFF; --accent-soft:#F7E2DF;
+  --ok:#22603C; --ok-soft:#E0EEE5; --warn:#7F4E00; --warn-soft:#F6E9CF;
+  --err:#A3241D; --err-soft:#F9E0DD; --info:#2A4766; --info-soft:#E1E8F1;
+  --s1:#D6D6D1; --s2:#9C9D98; --s3:#55575C; --s4:#B3312A;
+  --side-bg:#17181A; --side-ink:#F2F2F0; --side-muted:#A9ABAF; --side-active:#26282B; --side-line:#45474B;
+  --font-head:"Bricolage Grotesque","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --font-body:"Public Sans","Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
+  --r:6px; --ease:cubic-bezier(0.4,0,0.2,1); --t:all .3s cubic-bezier(0.4,0,0.2,1);
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+/* ============ Base ============ */
+*,*::before,*::after{box-sizing:border-box}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
+body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:16px;line-height:1.6;font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+h1,h2,h3{font-family:var(--font-head);line-height:1.15;margin:0;font-weight:700;letter-spacing:-0.015em}
+h1{font-size:clamp(1.85rem,1.3rem + 2vw,2.7rem);font-weight:800}
+h2{font-size:1.3rem}
+h3{font-size:1.05rem}
+p{margin:0}
+img,svg{max-width:100%}
+button{font:inherit;color:inherit}
+[hidden]{display:none !important}
+:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.vh{position:absolute !important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.ic{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.ic-sm{width:18px;height:18px}
+.muted{color:var(--muted)}
+.muted-sm{color:var(--muted);font-size:.875rem}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+@keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{transition:none !important;animation:none !important;scroll-behavior:auto !important}}
+
+/* ============ Routing (CSS only) ============ */
+.tab-radio{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+.page{display:none;animation:rise .35s var(--ease)}
+#t-home:checked ~ .shell #p-home,
+#t-pending:checked ~ .shell #p-pending,
+#t-closed:checked ~ .shell #p-closed,
+#t-payments:checked ~ .shell #p-payments,
+#t-invoice:checked ~ .shell #p-invoice,
+#t-inventory:checked ~ .shell #p-inventory,
+#t-profile:checked ~ .shell #p-profile{display:block}
+
+/* ============ Shell ============ */
+.shell{min-height:100%}
+.sidebar{display:none; }
+.main-col{min-width:0}
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;display:flex;align-items:center;gap:12px;padding:10px 16px;background:var(--bg);border-bottom:1px solid var(--line)}
+.top-meta{display:none;color:var(--muted);font-size:.9rem}
+.top-meta strong{color:var(--ink);font-weight:600}
+.top-actions{margin-left:auto;display:flex;align-items:center;gap:8px}
+main{max-width:1200px;margin:0 auto;padding:24px 16px 112px}
+
+.brand{font-family:var(--font-head);font-weight:800;font-size:1.75rem;letter-spacing:-0.04em;line-height:1;position:relative;display:inline-block;padding-bottom:6px}
+.brand::after{content:"";position:absolute;left:0;right:0;bottom:0;height:5px;background:var(--accent)}
+.brand-m{color:var(--ink)}
+
+.icon-btn{position:relative;display:grid;place-items:center;width:48px;height:48px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);color:var(--ink);cursor:pointer;transition:var(--t);list-style:none}
+.icon-btn::-webkit-details-marker{display:none}
+.icon-btn:hover{transform:translate(-1px,-1px);box-shadow:3px 3px 0 var(--shadow)}
+.dot{position:absolute;top:5px;right:5px;min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:var(--accent);color:var(--accent-ink);font-size:.6875rem;font-weight:700;display:grid;place-items:center;line-height:1}
+.avatar{display:grid;place-items:center;width:48px;height:48px;border-radius:50%;background:var(--ink);color:var(--bg);font-family:var(--font-head);font-weight:700;cursor:pointer;transition:var(--t)}
+.avatar:hover{box-shadow:3px 3px 0 var(--accent)}
+
+.notif{position:relative}
+.notif-panel{position:absolute;right:0;top:calc(100% + 10px);width:min(340px,calc(100vw - 32px));z-index:40;padding:8px;animation:rise .25s var(--ease)}
+.notif-panel h2{font-size:1rem;padding:8px 10px 4px}
+.notif-panel ul{list-style:none;margin:0;padding:0}
+.notif-panel li{display:grid;grid-template-columns:10px 1fr;gap:10px;padding:10px;border-top:1px solid var(--line-soft);font-size:.9rem;line-height:1.45}
+.notif-panel li:first-child{border-top:0}
+.notif-panel li::before{content:"";width:8px;height:8px;margin-top:7px;border-radius:50%;background:var(--accent)}
+.notif-panel small{display:block;color:var(--muted);font-size:.8125rem}
+
+/* Bottom nav (mobile) */
+.bottom-nav{position:fixed;left:0;right:0;bottom:0;z-index:30;display:grid;grid-template-columns:repeat(6,1fr);background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+.bn-link{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:62px;font-size:.6875rem;font-weight:700;color:var(--muted);cursor:pointer;transition:var(--t);-webkit-tap-highlight-color:transparent}
+.bn-link::before{content:"";position:absolute;top:-1px;left:20%;right:20%;height:3px;background:var(--accent);transform:scaleX(0);transition:var(--t)}
+
+/* Sidebar nav (desktop) */
+.side-brand{color:var(--side-ink)}
+.side-sub{margin-top:10px;color:var(--side-muted);font-size:.875rem}
+.side-nav{display:flex;flex-direction:column;gap:6px}
+.nav-link{display:flex;align-items:center;gap:12px;min-height:48px;padding:0 14px;border:1px solid transparent;border-radius:var(--r);color:var(--side-muted);font-weight:600;cursor:pointer;transition:var(--t)}
+.nav-link:hover{color:var(--side-ink);background:var(--side-active)}
+.nav-link .pill{margin-left:auto;min-width:22px;height:22px;padding:0 7px;border-radius:999px;background:var(--accent);color:#fff;font-size:.75rem;font-weight:700;display:grid;place-items:center}
+.side-help{margin-top:auto;padding:16px;border:1px solid var(--side-line);border-radius:var(--r);color:var(--side-muted);font-size:.875rem;line-height:1.5}
+.side-help strong{display:block;color:var(--side-ink);font-weight:600;margin-bottom:4px}
+
+/* Active + focus states for navigation */
+#t-home:checked ~ .shell .nav-link[data-for="home"],
+#t-pending:checked ~ .shell .nav-link[data-for="pending"],
+#t-closed:checked ~ .shell .nav-link[data-for="closed"],
+#t-payments:checked ~ .shell .nav-link[data-for="payments"],
+#t-invoice:checked ~ .shell .nav-link[data-for="payments"],
+#t-inventory:checked ~ .shell .nav-link[data-for="inventory"],
+#t-profile:checked ~ .shell .nav-link[data-for="profile"]{color:var(--side-ink);background:var(--side-active);border-color:var(--side-line);box-shadow:3px 3px 0 #0b5751}
+#t-home:checked ~ .shell .bn-link[data-for="home"],
+#t-pending:checked ~ .shell .bn-link[data-for="pending"],
+#t-closed:checked ~ .shell .bn-link[data-for="closed"],
+#t-payments:checked ~ .shell .bn-link[data-for="payments"],
+#t-invoice:checked ~ .shell .bn-link[data-for="payments"],
+#t-inventory:checked ~ .shell .bn-link[data-for="inventory"],
+#t-profile:checked ~ .shell .bn-link[data-for="profile"]{color:var(--accent)}
+#t-home:checked ~ .shell .bn-link[data-for="home"]::before,
+#t-pending:checked ~ .shell .bn-link[data-for="pending"]::before,
+#t-closed:checked ~ .shell .bn-link[data-for="closed"]::before,
+#t-payments:checked ~ .shell .bn-link[data-for="payments"]::before,
+#t-invoice:checked ~ .shell .bn-link[data-for="payments"]::before,
+#t-inventory:checked ~ .shell .bn-link[data-for="inventory"]::before,
+#t-profile:checked ~ .shell .bn-link[data-for="profile"]::before{transform:scaleX(1)}
+#t-home:focus-visible ~ .shell [data-for="home"],
+#t-pending:focus-visible ~ .shell [data-for="pending"],
+#t-closed:focus-visible ~ .shell [data-for="closed"],
+#t-payments:focus-visible ~ .shell [data-for="payments"],
+#t-inventory:focus-visible ~ .shell [data-for="inventory"],
+#t-profile:focus-visible ~ .shell [data-for="profile"]{outline:2px solid var(--accent);outline-offset:2px}
+
+/* ============ Primitives ============ */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:4px 4px 0 var(--shadow);padding:20px}
+.card-head{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:6px 16px;margin-bottom:18px}
+.card-head p{color:var(--muted);font-size:.9rem}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 18px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);color:var(--ink);font-weight:700;font-size:.9375rem;line-height:1.2;cursor:pointer;text-decoration:none;white-space:nowrap;box-shadow:3px 3px 0 var(--shadow);transition:var(--t)}
+.btn:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--shadow)}
+.btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--shadow)}
+.btn-primary{background:var(--accent);color:var(--accent-ink)}
+.btn-sm{padding:0 14px;font-size:.875rem}
+.btn-ghost{box-shadow:none}
+.btn-ghost:hover{box-shadow:3px 3px 0 var(--shadow)}
+label.btn:focus-within{outline:2px solid var(--ink);outline-offset:3px}
+.link{background:none;border:0;padding:0;color:inherit;text-decoration:underline;text-underline-offset:3px;cursor:pointer;font-weight:600;min-height:32px}
+
+.badge{display:inline-flex;align-items:center;gap:7px;padding:3px 10px;border-radius:999px;font-size:.8125rem;font-weight:700;line-height:1.4;white-space:nowrap}
+.badge::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.badge.is-ok{background:var(--ok-soft);color:var(--ok)}
+.badge.is-warn{background:var(--warn-soft);color:var(--warn)}
+.badge.is-err{background:var(--err-soft);color:var(--err)}
+.badge.is-info{background:var(--info-soft);color:var(--info)}
+.badge.is-neutral{background:var(--surface-2);color:var(--muted)}
+.badge.is-action{background:var(--accent-soft);color:var(--accent)}
+
+.page-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px 24px;margin-bottom:28px}
+.page-head .kicker{color:var(--muted);font-weight:600;margin-bottom:8px}
+.lede{color:var(--muted);margin-top:10px;max-width:58ch}
+.section{margin-top:24px}
+.grid-2{display:grid;gap:24px}
+
+/* ============ Dashboard ============ */
+.action-banner{display:flex;flex-wrap:wrap;align-items:center;gap:14px 20px;padding:18px 20px;border:1px solid var(--line);border-left:6px solid var(--accent);border-radius:var(--r);background:var(--accent-soft);color:var(--ink)}
+.action-banner .ic{color:var(--accent)}
+.action-banner p{flex:1 1 260px}
+.action-banner strong{font-weight:700}
+
+.kpis{display:grid;grid-auto-flow:column;grid-auto-columns:80%;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;padding:2px 6px 14px 2px;margin-right:-16px;scrollbar-width:thin}
+.kpi{scroll-snap-align:start;display:flex;flex-direction:column}
+.kpi-label{font-size:.9rem;font-weight:600;color:var(--muted)}
+.kpi-value{font-family:var(--font-head);font-size:2.2rem;line-height:1.15;font-weight:700;margin:12px 0 6px;letter-spacing:-0.02em;font-variant-numeric:tabular-nums lining-nums}
+.kpi-value small{font-size:1rem;font-weight:600;margin-right:4px;color:var(--muted)}
+.kpi-sub{margin-top:auto;font-size:.875rem;color:var(--muted)}
+.kpi.is-key{background:var(--ink);color:var(--bg);box-shadow:4px 4px 0 var(--accent);border-color:var(--ink)}
+.kpi.is-key .kpi-label,.kpi.is-key .kpi-sub,.kpi.is-key .kpi-value small{color:var(--bg)}
+.kpi .btn{margin-top:14px;align-self:flex-start}
+.kpi.is-key .btn{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);box-shadow:3px 3px 0 var(--bg)}
+
+.chart{display:grid;grid-template-columns:repeat(10,1fr);gap:8px;align-items:end;height:200px;padding-top:28px;border-bottom:1px solid var(--line)}
+.bar{position:relative;height:calc(var(--v) * 100%);min-height:3px;background:var(--ink);border-radius:3px 3px 0 0;transition:var(--t)}
+.bar:hover{background:var(--accent)}
+.bar.is-max{background:var(--accent)}
+.bar b{position:absolute;left:50%;bottom:calc(100% + 4px);transform:translateX(-50%);font-size:.6875rem;font-weight:700;color:var(--muted);white-space:nowrap}
+.chart-x{display:grid;grid-template-columns:repeat(10,1fr);gap:8px;margin-top:8px;text-align:center;font-size:.75rem;font-weight:600;color:var(--muted)}
+
+.stackbar{display:flex;height:16px;border:1px solid var(--line);border-radius:999px;overflow:hidden;margin:6px 0 20px}
+.stackbar i{display:block;height:100%;transition:var(--t)}
+.legend{list-style:none;margin:0;padding:0}
+.legend li{display:grid;grid-template-columns:14px 1fr auto;align-items:center;gap:12px;padding:11px 0;border-top:1px solid var(--line-soft)}
+.legend li:first-child{border-top:0}
+.legend .sw{width:14px;height:14px;border-radius:3px;border:1px solid var(--line)}
+.legend .lv{text-align:right;font-weight:700}
+.legend .lv small{display:block;font-weight:500;color:var(--muted);font-size:.8125rem}
+
+.journey{list-style:none;margin:0;padding:0;counter-reset:j}
+.journey li{counter-increment:j;display:grid;grid-template-columns:36px 1fr;gap:14px;padding:12px 0;border-top:1px solid var(--line-soft)}
+.journey li:first-child{border-top:0}
+.journey li::before{content:counter(j);display:grid;place-items:center;width:36px;height:36px;border:1px solid var(--line);border-radius:50%;font-weight:700;font-size:.875rem;background:var(--surface)}
+.journey li.is-key::before{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.journey strong{display:block;font-weight:700}
+.journey span{color:var(--muted);font-size:.9rem}
+
+.feed{list-style:none;margin:0;padding:0}
+.feed li{display:grid;grid-template-columns:1fr auto;gap:2px 16px;padding:12px 0;border-top:1px solid var(--line-soft)}
+.feed li:first-child{border-top:0}
+.feed p{font-size:.95rem;line-height:1.5}
+.feed time{color:var(--muted);font-size:.8125rem;white-space:nowrap}
+.feed .badge{grid-column:1;justify-self:start;margin-top:4px}
+
+/* ============ Chips & filters ============ */
+.chips{display:flex;gap:8px;overflow-x:auto;padding:2px 6px 12px 2px;margin-bottom:12px;scrollbar-width:thin}
+.chip{flex:none;display:inline-flex;align-items:center;gap:8px;min-height:48px;padding:0 16px;border:1px solid var(--line);border-radius:999px;background:var(--surface);font-weight:700;font-size:.9rem;cursor:pointer;transition:var(--t)}
+.chip:hover{box-shadow:3px 3px 0 var(--shadow);transform:translate(-1px,-1px)}
+.chip .count{min-width:24px;padding:0 7px;border-radius:999px;background:var(--surface-2);font-size:.8rem;text-align:center}
+.f-radio{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+#s-all:checked ~ .chips [for="s-all"],#s-qualified:checked ~ .chips [for="s-qualified"],#s-offer:checked ~ .chips [for="s-offer"],#s-cif:checked ~ .chips [for="s-cif"],#s-kyc:checked ~ .chips [for="s-kyc"],#s-expired:checked ~ .chips [for="s-expired"],
+#c-all:checked ~ .chips [for="c-all"],#c-year:checked ~ .chips [for="c-year"],#c-month:checked ~ .chips [for="c-month"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+#s-all:checked ~ .chips [for="s-all"] .count,#s-qualified:checked ~ .chips [for="s-qualified"] .count,#s-offer:checked ~ .chips [for="s-offer"] .count,#s-cif:checked ~ .chips [for="s-cif"] .count,#s-kyc:checked ~ .chips [for="s-kyc"] .count,#s-expired:checked ~ .chips [for="s-expired"] .count,
+#c-all:checked ~ .chips [for="c-all"] .count,#c-year:checked ~ .chips [for="c-year"] .count,#c-month:checked ~ .chips [for="c-month"] .count{background:var(--bg);color:var(--ink)}
+#s-all:focus-visible ~ .chips [for="s-all"],#s-qualified:focus-visible ~ .chips [for="s-qualified"],#s-offer:focus-visible ~ .chips [for="s-offer"],#s-cif:focus-visible ~ .chips [for="s-cif"],#s-kyc:focus-visible ~ .chips [for="s-kyc"],#s-expired:focus-visible ~ .chips [for="s-expired"],
+#c-all:focus-visible ~ .chips [for="c-all"],#c-year:focus-visible ~ .chips [for="c-year"],#c-month:focus-visible ~ .chips [for="c-month"]{outline:2px solid var(--accent);outline-offset:3px}
+/* stage filtering */
+#s-qualified:checked ~ .table-wrap tr[data-stage]:not([data-stage="qualified"]),
+#s-offer:checked ~ .table-wrap tr[data-stage]:not([data-stage="offer"]),
+#s-cif:checked ~ .table-wrap tr[data-stage]:not([data-stage="cif"]),
+#s-kyc:checked ~ .table-wrap tr[data-stage]:not([data-stage="kyc"]){display:none}
+.empty-expired{display:none}
+#s-expired:checked ~ .table-wrap{display:none}
+#s-expired:checked ~ .empty-expired{display:grid}
+/* booking period filtering */
+#c-year:checked ~ .bookings .booking:not([data-year="2026"]),
+#c-month:checked ~ .bookings .booking:not([data-month="1"]){display:none}
+
+/* ============ Tables ============ */
+.table-wrap{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:4px 4px 0 var(--shadow);overflow-x:auto}
+.data{width:100%;border-collapse:collapse}
+.data th{text-align:left;font-size:.8125rem;font-weight:700;color:var(--muted);padding:14px 16px;background:var(--surface-2);border-bottom:1px solid var(--line);white-space:nowrap}
+.data th.num{text-align:right}
+.data td{padding:14px 16px;border-bottom:1px solid var(--line-soft);vertical-align:middle}
+.data tbody tr:last-child td{border-bottom:0}
+.data tbody tr{transition:background .3s var(--ease)}
+.data tbody tr:hover{background:var(--surface-2)}
+.cell-title{display:block;font-weight:700}
+.cell-sub{display:block;color:var(--muted);font-size:.85rem}
+.stage{display:flex;align-items:center;gap:10px;white-space:nowrap}
+.stage-track{display:inline-grid;grid-template-columns:repeat(4,14px);gap:3px}
+.stage-track i{height:6px;border-radius:3px;background:var(--s1)}
+.stage-track i.on{background:var(--ink)}
+tr[data-stage="kyc"] .stage-track i.on{background:var(--accent)}
+.reason{display:block;margin-top:6px;color:var(--err);font-size:.8125rem;font-weight:600;max-width:30ch;line-height:1.4}
+
+/* ============ Closed deals accordion ============ */
+.bookings{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:4px 4px 0 var(--shadow);overflow:hidden}
+.b-headrow{display:none}
+.booking{border-bottom:1px solid var(--line-soft)}
+.booking:last-child{border-bottom:0}
+.booking summary{display:grid;grid-template-columns:1fr auto;gap:6px 12px;padding:16px;cursor:pointer;list-style:none;transition:background .3s var(--ease)}
+.booking summary::-webkit-details-marker{display:none}
+.booking summary:hover{background:var(--surface-2)}
+.booking summary > span:not(.b-id):not(.b-chev){grid-column:1 / -1}
+.b-id strong{font-weight:700}
+.b-id small{display:block;color:var(--muted);font-size:.8125rem}
+.b-chev{grid-column:2;grid-row:1;display:grid;place-items:center;width:40px;height:40px;border:1px solid var(--line);border-radius:50%}
+.b-chev .ic{transition:transform .3s var(--ease)}
+.booking[open] .b-chev .ic{transform:rotate(180deg)}
+.b-price{display:none}
+.b-unit::before{content:"Unit ";color:var(--muted)}
+.b-recv strong{font-weight:700}
+.b-recv small{color:var(--muted);font-size:.85rem}
+.b-prog{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}
+.b-prog small{font-weight:700;font-size:.85rem}
+.prog{display:block;height:8px;border:1px solid var(--line);border-radius:999px;background:var(--surface-2);overflow:hidden}
+.prog i{display:block;height:100%;background:var(--ink)}
+.prog.is-done i{background:var(--ok)}
+.booking-body{padding:4px 16px 20px;animation:rise .3s var(--ease)}
+.booking-body h3{font-size:.95rem;margin:4px 0 10px}
+.ms-list{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.ms{display:grid;grid-template-columns:1fr auto;grid-template-areas:"name badge" "meta meta";gap:2px 12px;padding:10px 12px;border:1px solid var(--line-soft);border-radius:var(--r);background:var(--bg)}
+.ms-name{grid-area:name;font-weight:600}
+.ms-meta{grid-area:meta;color:var(--muted);font-size:.875rem}
+.ms .badge{grid-area:badge;align-self:center}
+
+/* ============ Forms ============ */
+.form-grid{display:grid;gap:20px}
+.field .label{display:block;font-weight:700;font-size:.9rem;margin-bottom:6px}
+.field .opt{font-weight:500;color:var(--muted)}
+.hint{margin-top:6px;font-size:.8125rem;color:var(--muted)}
+.field-error{display:flex;gap:6px;align-items:flex-start;margin-top:6px;color:var(--err);font-size:.875rem;font-weight:600;line-height:1.45}
+.field-error::before{content:"!";flex:none;display:grid;place-items:center;width:18px;height:18px;margin-top:1px;border-radius:50%;background:var(--err);color:var(--surface);font-size:.75rem;font-weight:800}
+.input,.select select{width:100%;min-height:48px;padding:10px 14px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);color:var(--ink);font:inherit;transition:var(--t)}
+.input::placeholder{color:var(--muted);opacity:.85}
+.input:focus,.select select:focus{outline:none;box-shadow:3px 3px 0 var(--accent);border-color:var(--ink)}
+.input[aria-invalid="true"]{border-color:var(--err);box-shadow:3px 3px 0 var(--err)}
+.select{position:relative}
+.select select{appearance:none;-webkit-appearance:none;padding-right:44px;cursor:pointer}
+.select::after{content:"";position:absolute;right:18px;top:50%;width:8px;height:8px;border-right:2px solid var(--ink);border-bottom:2px solid var(--ink);transform:translateY(-70%) rotate(45deg);pointer-events:none}
+.check{display:flex;gap:12px;align-items:flex-start;min-height:48px;padding:10px 0;cursor:pointer;line-height:1.5}
+.check input{width:22px;height:22px;margin:1px 0 0;flex:none;accent-color:var(--accent)}
+.switch{display:inline-flex;align-items:center;gap:12px;min-height:48px;font-weight:700;cursor:pointer}
+.switch input{position:absolute;opacity:0;width:1px;height:1px}
+.track{position:relative;width:48px;height:28px;border:1px solid var(--line);border-radius:999px;background:var(--surface-2);transition:var(--t)}
+.track::after{content:"";position:absolute;top:4px;left:4px;width:18px;height:18px;border-radius:50%;background:var(--ink);transition:var(--t)}
+.switch input:checked + .track{background:var(--accent)}
+.switch input:checked + .track::after{transform:translateX(20px);background:var(--accent-ink)}
+.switch input:focus-visible + .track{outline:2px solid var(--ink);outline-offset:3px}
+
+.drop{display:grid;justify-items:center;gap:8px;padding:28px 20px;min-height:170px;align-content:center;text-align:center;border:1.5px dashed var(--line);border-radius:var(--r);background:var(--bg);cursor:pointer;transition:var(--t)}
+.drop:hover,.drop.is-drag{background:var(--accent-soft);border-color:var(--accent)}
+.drop:focus-within{outline:2px solid var(--ink);outline-offset:3px}
+.drop .ic{width:30px;height:30px;color:var(--accent)}
+.drop strong{font-weight:700}
+.drop span{color:var(--muted);font-size:.875rem}
+.drop[aria-invalid="true"],.field.has-error .drop{border-color:var(--err);background:var(--err-soft)}
+.file-chip{display:flex;align-items:center;gap:12px;margin-top:10px;padding:10px 10px 10px 14px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+.file-chip .ic{color:var(--accent)}
+.file-chip div{flex:1;min-width:0}
+.file-chip p{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.file-chip small{color:var(--muted)}
+.file-chip button{width:48px;height:48px;border:0;background:none;cursor:pointer;border-radius:var(--r);font-size:1.4rem;line-height:1;color:var(--muted)}
+.file-chip button:hover{background:var(--surface-2);color:var(--ink)}
+
+.err-summary{padding:16px 20px;margin-bottom:22px;border:1px solid var(--err);border-left:6px solid var(--err);border-radius:var(--r);background:var(--err-soft)}
+.err-summary:focus{outline:2px solid var(--err);outline-offset:3px}
+.err-summary h2{font-size:1.05rem;margin-bottom:6px}
+.err-summary ul{margin:0;padding-left:18px}
+.err-summary li{color:var(--err)}
+.err-summary .link{color:var(--err);text-align:left}
+.note{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:var(--r);border:1px solid var(--line);font-size:.925rem;line-height:1.5}
+.note.is-err{background:var(--err-soft);border-color:var(--err)}
+.note.is-err .ic{color:var(--err)}
+
+/* ============ Empty states ============ */
+.empty{display:grid;justify-items:center;text-align:center;gap:12px;padding:48px 24px;border:1.5px dashed var(--line);border-radius:var(--r);background:var(--surface)}
+.empty svg.art{width:120px;height:96px;color:var(--ink)}
+.empty svg.art .acc{stroke:var(--accent)}
+.empty p{color:var(--muted);max-width:44ch}
+.empty .btn{margin-top:6px}
+
+/* ============ Invoice ============ */
+.back{display:inline-flex;align-items:center;gap:6px;min-height:48px;padding:0 12px 0 6px;margin:-8px 0 10px -6px;border:0;background:none;color:var(--muted);font-weight:700;cursor:pointer;border-radius:var(--r);transition:var(--t)}
+.back:hover{color:var(--ink);background:var(--surface-2)}
+.inv-grid{display:grid;gap:24px}
+.kv{display:flex;justify-content:space-between;gap:16px;padding:10px 0;border-top:1px dashed var(--line-soft);font-size:.95rem}
+.kv:first-of-type{border-top:0}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0;font-weight:600;text-align:right}
+.kv.total{border-top:1px solid var(--line);margin-top:6px;padding-top:14px}
+.kv.total dt{color:var(--ink);font-weight:700}
+.kv.total dd{font-family:var(--font-head);font-size:1.4rem;font-weight:700}
+.success{display:grid;gap:14px;justify-items:start}
+.success .tick{display:grid;place-items:center;width:56px;height:56px;border-radius:50%;background:var(--ok-soft);color:var(--ok);border:1px solid var(--ok)}
+.success .tick .ic{width:28px;height:28px;stroke-width:2.2}
+.success p{color:var(--muted);max-width:52ch}
+.btn-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:6px}
+
+/* ============ Profile ============ */
+.profile-grid{display:grid;gap:24px;align-items:start}
+.id-card{display:grid;gap:18px}
+.avatar-lg{display:grid;place-items:center;width:84px;height:84px;border-radius:50%;background:var(--accent);color:var(--accent-ink);font-family:var(--font-head);font-weight:800;font-size:1.8rem;border:1px solid var(--line);box-shadow:3px 3px 0 var(--shadow)}
+.id-card h2{font-size:1.5rem}
+.id-facts{display:grid;gap:10px;margin:0}
+.id-facts div{display:flex;justify-content:space-between;gap:12px;font-size:.925rem;padding-top:10px;border-top:1px solid var(--line-soft)}
+.id-facts dt{color:var(--muted)}
+.id-facts dd{margin:0;font-weight:700;text-align:right}
+.kyc-meter p{font-size:.9rem;margin-bottom:8px}
+.kyc-meter strong{font-weight:700}
+.docs{list-style:none;margin:0;padding:0}
+.doc{display:grid;grid-template-columns:44px 1fr;grid-template-areas:"ic main" "ic badge" "act act";gap:8px 14px;padding:16px 0;border-top:1px solid var(--line-soft)}
+.doc:first-child{border-top:0;padding-top:4px}
+.doc-ic{grid-area:ic;display:grid;place-items:center;width:44px;height:44px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface-2)}
+.doc-main{grid-area:main}
+.doc-title{font-weight:700}
+.doc-meta{color:var(--muted);font-size:.875rem}
+.doc-msg{margin-top:4px;font-size:.875rem;font-weight:600}
+.doc-msg.is-err{color:var(--err)}
+.doc-msg.is-warn{color:var(--warn)}
+.doc .badge{grid-area:badge;justify-self:start}
+.doc .btn{grid-area:act;width:100%}
+.dl-grid{display:grid;gap:16px;margin:0}
+.dl-grid dt{color:var(--muted);font-size:.85rem}
+.dl-grid dd{margin:2px 0 0;font-weight:600;overflow-wrap:anywhere}
+.pd-form{display:none}
+#edit-profile:checked ~ .pd-view{display:none}
+#edit-profile:checked ~ .pd-form{display:grid}
+#edit-profile:checked ~ .card-head .edit-btn{display:none}
+#edit-profile:focus-visible ~ .card-head .edit-btn{outline:2px solid var(--ink);outline-offset:3px}
+
+/* ============ Inventory ============ */
+.filters{display:grid;gap:16px;margin-bottom:16px}
+.results{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;margin:20px 0 12px;color:var(--muted);font-size:.925rem}
+.results strong{color:var(--ink)}
+
+/* ============ Dialog & toast ============ */
+dialog{width:min(520px,calc(100% - 32px));padding:0;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);color:var(--ink);box-shadow:6px 6px 0 var(--shadow)}
+dialog[open]{animation:rise .3s var(--ease)}
+dialog::backdrop{background:rgba(18,19,21,.6)}
+.dlg-body{padding:24px}
+.dlg-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:18px}
+.dlg-head p{color:var(--muted);margin-top:4px;font-size:.925rem}
+.dlg-close{flex:none;width:48px;height:48px;margin:-10px -10px 0 0;border:0;background:none;border-radius:var(--r);cursor:pointer;font-size:1.5rem;color:var(--muted)}
+.dlg-close:hover{background:var(--surface-2);color:var(--ink)}
+.toast{position:fixed;left:16px;right:16px;bottom:calc(78px + env(safe-area-inset-bottom,0px));z-index:60;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 10px 10px 18px;background:var(--ink);color:var(--bg);border-radius:var(--r);box-shadow:4px 4px 0 var(--accent);opacity:0;transform:translateY(16px);pointer-events:none;transition:var(--t);font-weight:600;font-size:.95rem;line-height:1.45}
+.toast.show{opacity:1;transform:none;pointer-events:auto}
+.toast-btn{flex:none;min-height:48px;padding:0 14px;border:1px solid var(--bg);border-radius:var(--r);background:transparent;color:var(--bg);font-weight:700;cursor:pointer;transition:var(--t)}
+.toast-btn:hover{background:var(--bg);color:var(--ink)}
+
+/* ============ Mobile-only table → card transform ============ */
+@media (max-width:767px){
+  .table-wrap{background:none;border:0;box-shadow:none;overflow:visible}
+  .data thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+  .data,.data tbody{display:block}
+  .data tr{display:block;margin-bottom:16px;padding:4px 0;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:4px 4px 0 var(--shadow)}
+  .data tbody tr:hover{background:var(--surface)}
+  .data td{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:10px 16px;text-align:right;border-bottom:1px solid var(--line-soft)}
+  .data td::before{content:attr(data-label);flex:none;text-align:left;font-size:.85rem;font-weight:600;color:var(--muted)}
+  .data td.cell-primary{display:block;text-align:left;padding-top:14px}
+  .data td.cell-primary::before{display:none}
+  .data td.cell-action{display:block;text-align:left;border-bottom:0;padding:12px 16px 14px}
+  .data td.cell-action::before{display:none}
+  .data td.cell-action .btn{width:100%}
+  .data tbody tr:last-child td{border-bottom:1px solid var(--line-soft)}
+  .data tbody tr td:last-child{border-bottom:0}
+  .reason{text-align:right;margin-left:auto}
+  .bar b{display:none}
+  .bar.is-max b{display:block}
+  dialog{width:100%;max-width:100%;margin:auto 0 0;border-radius:14px 14px 0 0;box-shadow:none;padding-bottom:env(safe-area-inset-bottom,0px)}
+}
+
+/* ============ Breakpoints ============ */
+@media (min-width:768px){
+  main{padding:32px 32px 112px}
+  .top-meta{display:block}
+  .card{padding:24px}
+  .kpis{grid-auto-flow:row;grid-template-columns:repeat(3,minmax(0,1fr));overflow:visible;margin-right:0;padding:0}
+  .form-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .form-grid .span-2{grid-column:1 / -1}
+  .filters{grid-template-columns:repeat(3,minmax(0,1fr)) auto;align-items:end}
+  .dl-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .b-headrow,.booking summary{grid-template-columns:1fr 1.5fr .7fr 1fr 1.05fr 1.2fr 40px;align-items:center;gap:16px}
+  .b-headrow{display:grid;padding:14px 16px;background:var(--surface-2);border-bottom:1px solid var(--line);font-size:.8125rem;font-weight:700;color:var(--muted)}
+  .b-headrow .num{text-align:right}
+  .booking summary > span:not(.b-id):not(.b-chev){grid-column:auto}
+  .b-chev{grid-column:auto;grid-row:auto}
+  .b-price{display:block}
+  .b-unit::before{content:none}
+  .b-recv small{display:none}
+  .ms{grid-template-columns:1.6fr 1fr auto;grid-template-areas:"name meta badge"}
+  .ms-meta{text-align:right}
+  .doc{grid-template-columns:44px 1fr auto auto;grid-template-areas:"ic main badge act";align-items:center}
+  .doc .btn{width:auto}
+  .doc .badge{justify-self:end}
+  .toast{left:auto;right:32px;max-width:460px}
+}
+@media (min-width:1024px){
+  .shell{display:grid;grid-template-columns:264px minmax(0,1fr)}
+  .sidebar{display:flex;flex-direction:column;gap:32px;position:sticky;top:0;height:100vh;padding:28px 20px;background:var(--side-bg);color:var(--side-ink);border-right:1px solid var(--line);overflow-y:auto}
+  .sidebar :focus-visible{outline-color:var(--side-ink)}
+  .bottom-nav{display:none}
+  .brand-m{display:none}
+  .topbar{padding:12px 48px}
+  main{padding:40px 48px 72px}
+  .grid-2{grid-template-columns:minmax(0,1.45fr) minmax(0,1fr)}
+  .inv-grid{grid-template-columns:minmax(0,1.5fr) minmax(300px,1fr);align-items:start}
+  .inv-summary{position:sticky;top:96px}
+  .profile-grid{grid-template-columns:320px minmax(0,1fr)}
+  .id-card{position:sticky;top:96px}
+  .toast{bottom:32px}
+}
+@media (max-width:1023px){
+  .inv-summary{order:-1}
+}
+
+/* ================= COLOUR LAYER ================= */
+:root{
+  --r:10px; --rl:16px;
+  --bg:#F3F5FA; --surface:#FFFFFF; --surface-2:#EEF2F8;
+  --ink:#0E1A2E; --muted:#4F5B70; --line:#0E1A2E; --line-soft:#DCE2EC; --shadow:#CBD5E5;
+  --accent:var(--brand-primary); --accent-ink:#FFFFFF; --accent-soft:#FCE6E3;
+  --navy:var(--brand-navy); --sapphire:#2F5FD0; --emerald:#0F7A64; --gold:#D9A21B; --plum:#7A3592; --coral:#E0533F; --copper:#A0521A;
+  --sapphire-soft:#E5ECFB; --emerald-soft:#DDF2EA; --gold-soft:#FBF0D5; --plum-soft:#F2E5F7; --coral-soft:#FCE6E1; --copper-soft:#F8E8DA;
+  --gold-ink:#8F6200; --coral-ink:#B8382A;
+  --ok:#0F7A64; --ok-soft:#DDF2EA; --warn:#8A5A00; --warn-soft:#FBF0D5; --err:#B42318; --err-soft:#FDE4E1; --info:#2349A8; --info-soft:#E5ECFB;
+  --s1:#2F5FD0; --s2:#D9A21B; --s3:#7A3592; --s4:#0F7A64;
+  --th-bg:var(--brand-navy); --topbar:rgba(255,255,255,.86);
+  --banner-bg:linear-gradient(100deg,#FFF3D3 0%,#FDE3DC 100%);
+  --ribbon:linear-gradient(90deg,var(--brand-primary) 0%,#E0533F 18%,#D9A21B 38%,#0F7A64 58%,#2F5FD0 78%,#7A3592 100%);
+}
+body{background:radial-gradient(1200px 600px at 100% -10%,var(--sapphire-soft),transparent 60%),radial-gradient(900px 500px at -10% 110%,var(--gold-soft),transparent 60%),var(--bg);background-attachment:fixed}
+body::before{background:var(--topbar)}
+
+/* Top bar + ribbon */
+.topbar{background:var(--topbar);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:0}
+.topbar::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--ribbon)}
+.icon-btn{border-color:var(--line-soft);border-radius:12px}
+.avatar{background:linear-gradient(135deg,var(--brand-primary-deep),var(--brand-primary));color:#fff}
+
+/* Sidebar */
+.sidebar{border-right:0;background:radial-gradient(120% 50% at 0% 0%,rgba(47,95,208,.45),transparent 60%),radial-gradient(100% 40% at 100% 100%,color-mix(in srgb,var(--brand-primary) 35%,transparent),transparent 65%),linear-gradient(180deg,var(--brand-navy),var(--brand-navy-2))}
+.side-brand::after,.brand::after{background:var(--ribbon)}
+.side-sub{color:#C4CDE0}
+.nav-link{color:#C4CDE0;border-radius:12px;padding:0 10px}
+.nav-link .ic{width:36px;height:36px;padding:7px;border-radius:10px;background:rgba(255,255,255,.08);transition:var(--t)}
+.nav-link[data-for="home"] .ic{color:#9DB8FF}
+.nav-link[data-for="pending"] .ic{color:var(--brand-gold)}
+.nav-link[data-for="closed"] .ic{color:#4FD1AE}
+.nav-link[data-for="payments"] .ic{color:#FF8A73}
+.nav-link[data-for="inventory"] .ic{color:#D9A5EE}
+.nav-link[data-for="profile"] .ic{color:#EEF2F8}
+.nav-link:hover{background:rgba(255,255,255,.07);color:#fff}
+#t-home:checked ~ .shell .nav-link[data-for="home"],
+#t-pending:checked ~ .shell .nav-link[data-for="pending"],
+#t-closed:checked ~ .shell .nav-link[data-for="closed"],
+#t-payments:checked ~ .shell .nav-link[data-for="payments"],
+#t-invoice:checked ~ .shell .nav-link[data-for="payments"],
+#t-inventory:checked ~ .shell .nav-link[data-for="inventory"],
+#t-profile:checked ~ .shell .nav-link[data-for="profile"]{color:#fff;background:linear-gradient(90deg,rgba(255,255,255,.16),rgba(255,255,255,.04));border-color:rgba(255,255,255,.18);box-shadow:3px 3px 0 #2d9786}
+#t-home:checked ~ .shell .nav-link[data-for="home"] .ic,
+#t-pending:checked ~ .shell .nav-link[data-for="pending"] .ic,
+#t-closed:checked ~ .shell .nav-link[data-for="closed"] .ic,
+#t-payments:checked ~ .shell .nav-link[data-for="payments"] .ic,
+#t-invoice:checked ~ .shell .nav-link[data-for="payments"] .ic,
+#t-inventory:checked ~ .shell .nav-link[data-for="inventory"] .ic,
+#t-profile:checked ~ .shell .nav-link[data-for="profile"] .ic{background:rgba(255,255,255,.16)}
+.nav-link .pill{background:linear-gradient(135deg,var(--brand-primary),var(--brand-primary-deep));color:#fff !important}
+.side-help{
+  /*border:1px solid color-mix(in srgb,var(--brand-gold) 35%,transparent);*/
+  background:linear-gradient(135deg,color-mix(in srgb, #ffffff 14%,transparent),rgba(255,255,255,.03));color:#C4CDE0;border-radius:12px}
+.side-help strong{color:#fff}
+
+/* Bottom nav (mobile), one colour per section */
+.bottom-nav{border-top:0;box-shadow:0 -10px 30px rgba(14,26,46,.12)}
+.bottom-nav::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:var(--ribbon)}
+#t-home:checked ~ .shell .bn-link[data-for="home"]{color:var(--accent)}
+#t-pending:checked ~ .shell .bn-link[data-for="pending"]{color:var(--sapphire)}
+#t-closed:checked ~ .shell .bn-link[data-for="closed"]{color:var(--emerald)}
+#t-payments:checked ~ .shell .bn-link[data-for="payments"],#t-invoice:checked ~ .shell .bn-link[data-for="payments"]{color:var(--copper)}
+#t-inventory:checked ~ .shell .bn-link[data-for="inventory"]{color:var(--plum)}
+#t-profile:checked ~ .shell .bn-link[data-for="profile"]{color:var(--ink)}
+.bn-link::before{background:currentColor;top:3px;height:3px;border-radius:3px}
+
+/* Page heads become colour banners, one hue per section */
+.page-head{position:relative;isolation:isolate;overflow:hidden;padding:30px 24px 34px;border-radius:var(--rl);color:#fff;background:var(--hero);box-shadow:0 22px 44px -26px rgba(14,26,46,.7)}
+.page-head::before{content:"";position:absolute;left:0;right:0;bottom:0;height:5px;background:var(--ribbon)}
+.page-head::after{content:"";position:absolute;right:-10px;bottom:0;width:min(440px,75%);height:92%;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 200'%3E%3Cg fill='white'%3E%3Crect x='6' y='96' width='40' height='104'/%3E%3Crect x='54' y='54' width='50' height='146'/%3E%3Crect x='112' y='112' width='34' height='88'/%3E%3Crect x='154' y='26' width='56' height='174'/%3E%3Cpolygon points='154,26 182,2 210,26'/%3E%3Crect x='218' y='72' width='44' height='128'/%3E%3Crect x='270' y='104' width='36' height='96'/%3E%3Crect x='314' y='44' width='48' height='156'/%3E%3Crect x='368' y='124' width='32' height='76'/%3E%3C/g%3E%3C/svg%3E") no-repeat right bottom/contain;opacity:.13;z-index:-1;pointer-events:none}
+.page-head h1{color:#fff}
+.page-head .lede,.page-head .kicker{color:rgba(255,255,255,.88)}
+.page-head .btn{background:#fff;color:var(--brand-navy);border-color:#fff;box-shadow:3px 3px 0 rgba(0,0,0,.35)}
+.page-head .btn-primary{background:var(--brand-gold);color:var(--brand-navy);border-color:var(--brand-gold)}
+#p-home .page-head{--hero:radial-gradient(60% 120% at 100% 0%,color-mix(in srgb,var(--brand-gold) 45%,transparent),transparent 60%),radial-gradient(50% 90% at 0% 100%,color-mix(in srgb,var(--brand-primary) 55%,transparent),transparent 60%),linear-gradient(135deg,var(--brand-navy) 0%,var(--brand-navy-2) 100%);padding:38px 28px 42px}
+#p-pending .page-head{--hero:radial-gradient(50% 100% at 100% 0%,rgba(134,166,245,.5),transparent 60%),linear-gradient(135deg,#112150 0%,#2F5FD0 100%)}
+#p-closed .page-head{--hero:radial-gradient(50% 100% at 100% 0%,rgba(79,209,174,.4),transparent 60%),linear-gradient(135deg,#073A30 0%,#0F7A64 100%)}
+#p-payments .page-head,#p-invoice .page-head{--hero:radial-gradient(50% 100% at 100% 0%,color-mix(in srgb,var(--brand-gold) 45%,transparent),transparent 60%),linear-gradient(135deg,#4A2205 0%,#A0521A 100%)}
+#p-inventory .page-head{--hero:radial-gradient(50% 100% at 100% 0%,rgba(224,83,63,.4),transparent 60%),linear-gradient(135deg,#2E1240 0%,#7A3592 100%)}
+#p-profile .page-head{--hero:radial-gradient(50% 100% at 100% 0%,rgba(134,166,245,.35),transparent 60%),linear-gradient(135deg,var(--brand-navy) 0%,#2B3F63 100%)}
+
+/* Cards and buttons */
+.card{border:1px solid var(--line-soft);border-radius:var(--rl);box-shadow:4px 4px 0 var(--shadow)}
+.btn{border-radius:var(--r)}
+.btn-primary{background:linear-gradient(135deg,var(--brand-primary-deep),var(--brand-primary));color:#fff;border-color:var(--brand-primary-deep);box-shadow:3px 3px 0 var(--navy)}
+.btn-primary:hover{box-shadow:4px 4px 0 var(--gold)}
+.action-banner{border:1px solid var(--line-soft);border-left:6px solid var(--gold);border-radius:var(--rl);background:var(--banner-bg);box-shadow:4px 4px 0 var(--shadow)}
+.action-banner .ic{color:var(--coral-ink)}
+
+/* KPI tiles: one colour each */
+.kpi{--kc:var(--sapphire);--ks:var(--sapphire-soft);--ki:var(--sapphire);border-top:4px solid var(--kc);box-shadow:5px 5px 0 color-mix(in srgb,var(--kc) 28%,transparent);transition:var(--t)}
+.kpi:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 color-mix(in srgb,var(--kc) 38%,transparent)}
+.k-sapphire{--kc:var(--sapphire);--ks:var(--sapphire-soft);--ki:var(--sapphire)}
+.k-emerald{--kc:var(--emerald);--ks:var(--emerald-soft);--ki:var(--emerald)}
+.k-plum{--kc:var(--plum);--ks:var(--plum-soft);--ki:var(--plum)}
+.k-coral{--kc:var(--coral);--ks:var(--coral-soft);--ki:var(--coral-ink)}
+.k-gold{--kc:var(--gold);--ks:var(--gold-soft);--ki:var(--gold-ink)}
+.kpi-ic{display:grid;place-items:center;width:46px;height:46px;border-radius:12px;background:var(--ks);color:var(--ki);margin-bottom:14px}
+.kpi-label{color:var(--muted)}
+.kpi.is-key{background:radial-gradient(80% 80% at 100% 0%,color-mix(in srgb,var(--brand-gold) 35%,transparent),transparent 60%),linear-gradient(135deg,var(--brand-primary-deep) 0%,var(--brand-primary) 100%);color:#fff;border:0;box-shadow:5px 5px 0 color-mix(in srgb,var(--brand-primary) 30%,transparent)}
+.kpi.is-key .kpi-ic{background:rgba(255,255,255,.18);color:#fff}
+.kpi.is-key .kpi-label,.kpi.is-key .kpi-sub,.kpi.is-key .kpi-value small,.kpi.is-key .kpi-value{color:#fff}
+.kpi.is-key .btn{background:#fff;color:var(--brand-primary-deep);border-color:#fff;box-shadow:3px 3px 0 rgba(0,0,0,.28)}
+
+/* Chart */
+.chart{border-bottom:1px solid var(--line-soft);background:repeating-linear-gradient(to top,transparent 0 42px,var(--line-soft) 42px 43px)}
+.bar{background:linear-gradient(180deg,var(--sapphire),color-mix(in srgb,var(--sapphire) 45%,var(--emerald)));border-radius:8px 8px 2px 2px}
+.bar:hover{background:linear-gradient(180deg,var(--plum),var(--sapphire))}
+.bar.is-max{background:linear-gradient(180deg,var(--gold),var(--accent))}
+.stackbar{border:0;gap:3px;height:14px}
+.stackbar i{border-radius:999px}
+.legend .sw{border:0;border-radius:50%}
+
+/* Journey + feed */
+.journey li:nth-child(1)::before{background:var(--sapphire-soft);color:var(--sapphire);border-color:var(--sapphire)}
+.journey li:nth-child(2)::before{background:var(--plum-soft);color:var(--plum);border-color:var(--plum)}
+.journey li:nth-child(3)::before{background:var(--emerald-soft);color:var(--emerald);border-color:var(--emerald)}
+.journey li:nth-child(4)::before{background:linear-gradient(135deg,#D9A21B,var(--brand-primary));color:#fff;border:0}
+.journey li:nth-child(5)::before{background:linear-gradient(135deg,var(--brand-primary),#7A3592);color:#fff;border:0}
+.journey li:nth-child(6)::before{background:var(--emerald);color:#fff;border:0}
+.feed li{padding-left:14px;position:relative}
+.feed li::before{content:"";position:absolute;left:0;top:18px;width:6px;height:6px;border-radius:50%;background:var(--sapphire)}
+.feed li:nth-child(2)::before{background:var(--accent)}
+.feed li:nth-child(3)::before{background:var(--err)}
+.feed li:nth-child(4)::before{background:var(--gold)}
+.feed li:nth-child(5)::before{background:var(--emerald)}
+
+/* Chips */
+.chip{border-color:var(--line-soft);background:var(--surface)}
+.chip::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--muted)}
+[for="s-all"]::before{background:conic-gradient(var(--s1),var(--s2),var(--s3),var(--s4),var(--s1))}
+[for="s-qualified"]::before{background:var(--s1)} [for="s-offer"]::before{background:var(--s2)}
+[for="s-cif"]::before{background:var(--s3)} [for="s-kyc"]::before{background:var(--s4)} [for="s-expired"]::before{background:var(--coral)}
+[for="c-all"]::before{background:conic-gradient(var(--emerald),var(--gold),var(--sapphire),var(--emerald))}
+[for="c-year"]::before{background:var(--gold)} [for="c-month"]::before{background:var(--emerald)}
+
+/* Tables */
+.table-wrap{border:1px solid var(--line-soft);border-radius:var(--rl);box-shadow:4px 4px 0 var(--shadow)}
+.data th{background:var(--th-bg);color:#fff;border-bottom:3px solid var(--accent)}
+#p-pending .data th{border-bottom-color:var(--sapphire)}
+#p-payments .data th{border-bottom-color:var(--gold)}
+#p-inventory .data th{border-bottom-color:var(--plum)}
+.data tbody tr:nth-child(even){background:color-mix(in srgb,var(--surface-2) 55%,var(--surface))}
+.data tbody tr:hover{background:var(--sapphire-soft)}
+tr[data-stage="qualified"] .stage-track i.on{background:var(--s1)}
+tr[data-stage="offer"] .stage-track i.on{background:var(--s2)}
+tr[data-stage="cif"] .stage-track i.on{background:var(--s3)}
+tr[data-stage="kyc"] .stage-track i.on{background:var(--s4)}
+.badge.is-action{background:linear-gradient(135deg,var(--brand-primary),#E0533F);color:#fff}
+.badge.is-action::before{background:#fff}
+
+/* Bookings */
+.bookings{border:1px solid var(--line-soft);border-radius:var(--rl);box-shadow:4px 4px 0 var(--shadow)}
+.b-headrow{background:var(--th-bg);color:#fff;border-bottom:3px solid var(--emerald)}
+.b-chev{border-color:var(--emerald);color:var(--emerald)}
+.booking[open]{background:var(--emerald-soft)}
+.booking[open] .b-chev{background:var(--emerald);color:#fff}
+.prog{border:0;background:var(--surface-2)}
+.prog i{background:linear-gradient(90deg,var(--sapphire),var(--emerald));border-radius:999px}
+.prog.is-done i{background:linear-gradient(90deg,var(--emerald),var(--gold))}
+.ms{background:var(--surface)}
+
+/* Forms */
+.input,.select select{border-color:color-mix(in srgb,var(--line) 35%,var(--line-soft))}
+.drop{border-color:var(--sapphire);background:var(--sapphire-soft)}
+.drop .ic{color:var(--sapphire)}
+.drop:hover,.drop.is-drag{background:var(--plum-soft);border-color:var(--plum)}
+.kv.total{background:var(--gold-soft);border-top:0;border-radius:12px;margin:10px -12px 0;padding:14px 12px}
+.inv-summary{border-top:4px solid var(--gold)}
+.filters{border-top:4px solid var(--plum)}
+.switch input:checked + .track{background:linear-gradient(135deg,var(--plum),var(--sapphire))}
+
+/* Empty states */
+.empty{border:1.5px dashed color-mix(in srgb,var(--sapphire) 45%,var(--line-soft));border-radius:var(--rl);background:linear-gradient(180deg,var(--surface),var(--sapphire-soft))}
+.empty svg.art{color:var(--sapphire)}
+.empty svg.art .acc{stroke:var(--accent)}
+
+/* Profile */
+.id-card{background:linear-gradient(180deg,var(--sapphire-soft) 0 110px,var(--surface) 110px)}
+.avatar-lg{background:linear-gradient(135deg,var(--brand-primary-deep),var(--brand-primary));color:#fff;border:3px solid var(--surface);box-shadow:4px 4px 0 var(--gold)}
+#kyc-bar{background:linear-gradient(90deg,var(--emerald),var(--sapphire))}
+.doc:nth-child(1) .doc-ic{background:var(--sapphire-soft);color:var(--sapphire);border-color:transparent}
+.doc:nth-child(2) .doc-ic{background:var(--plum-soft);color:var(--plum);border-color:transparent}
+.doc:nth-child(3) .doc-ic{background:var(--gold-soft);color:var(--gold-ink);border-color:transparent}
+.doc:nth-child(4) .doc-ic{background:var(--coral-soft);color:var(--coral-ink);border-color:transparent}
+.doc:nth-child(5) .doc-ic{background:var(--emerald-soft);color:var(--emerald);border-color:transparent}
+
+/* Dialog, notifications, toast */
+dialog{border:0;border-radius:var(--rl);overflow:hidden;box-shadow:0 30px 60px -20px rgba(14,26,46,.55)}
+dialog::before{content:"";display:block;height:6px;background:var(--ribbon)}
+.notif-panel li:nth-child(1)::before{background:var(--accent)}
+.notif-panel li:nth-child(2)::before{background:var(--err)}
+.notif-panel li:nth-child(3)::before{background:var(--gold)}
+.toast{background:linear-gradient(135deg,var(--brand-navy),var(--brand-navy-2));color:#fff;box-shadow:4px 4px 0 var(--gold)}
+.toast-btn{border-color:#fff;color:#fff}
+.toast-btn:hover{background:#fff;color:var(--brand-navy)}
+
+@media (max-width:767px){
+  .data tr{border:1px solid var(--line-soft);border-left:5px solid var(--sapphire);border-radius:14px;box-shadow:4px 4px 0 var(--shadow)}
+  .data tbody tr:nth-child(even){background:var(--surface)}
+  #p-payments .data tr{border-left-color:var(--copper)}
+  #p-inventory .data tr{border-left-color:var(--plum)}
+  tr[data-stage="qualified"]{border-left-color:var(--s1) !important}
+  tr[data-stage="offer"]{border-left-color:var(--s2) !important}
+  tr[data-stage="cif"]{border-left-color:var(--s3) !important}
+  tr[data-stage="kyc"]{border-left-color:var(--s4) !important}
+  .page-head{padding:24px 18px 28px}
+}
+@media (prefers-reduced-motion: reduce){.kpi:hover{transform:none}}
+
+/* ================= BRAND MAPPING (reads the settings block at the top) ================= */
+:root{
+  --font-head:var(--font-heading); --font-body:var(--font-text);
+  --brand-primary-deep:color-mix(in srgb,var(--brand-primary) 72%,#000);
+  --accent:var(--brand-primary); --accent-soft:color-mix(in srgb,var(--brand-primary) 13%,#fff);
+  --bg:var(--page-bg); --th-bg:var(--brand-navy);
+}
+.sidebar{background:radial-gradient(120% 50% at 0% 0%,color-mix(in srgb,var(--brand-navy-2) 70%,transparent),transparent 60%),radial-gradient(100% 40% at 100% 100%,color-mix(in srgb,var(--brand-primary) 35%,transparent),transparent 65%),var(--sidebar-bg); background-image: url(https://peacehomesdevelopment.com/frontend/assets/images/banner/greenBG.jpg);}
+#p-home .page-head{--hero:radial-gradient(60% 120% at 100% 0%,color-mix(in srgb,var(--brand-gold) 45%,transparent),transparent 60%),radial-gradient(50% 90% at 0% 100%,color-mix(in srgb,var(--brand-primary) 55%,transparent),transparent 60%),linear-gradient(135deg,var(--brand-navy) 0%,var(--banner-home) 100%); background-image: url(https://peacehomesdevelopment.com/frontend/assets/images/banner/greenBG.jpg);}
+#p-pending .page-head{--hero:radial-gradient(50% 100% at 100% 0%,color-mix(in srgb,var(--banner-pending) 60%,#fff 20%),transparent 60%),linear-gradient(135deg,color-mix(in srgb,var(--banner-pending) 45%,#000) 0%,var(--banner-pending) 100%); background-image: url(https://peacehomesdevelopment.com/frontend/assets/images/banner/greenBG.jpg);}
+#p-closed .page-head{--hero:radial-gradient(50% 100% at 100% 0%,color-mix(in srgb,var(--banner-closed) 60%,#fff 20%),transparent 60%),linear-gradient(135deg,color-mix(in srgb,var(--banner-closed) 45%,#000) 0%,var(--banner-closed) 100%); background-image: url(https://peacehomesdevelopment.com/frontend/assets/images/banner/greenBG.jpg);}
+#p-payments .page-head,#p-invoice .page-head{--hero:radial-gradient(50% 100% at 100% 0%,color-mix(in srgb,var(--brand-gold) 40%,transparent),transparent 60%),linear-gradient(135deg,color-mix(in srgb,var(--banner-payments) 45%,#000) 0%,var(--banner-payments) 100%); background-image: url(https://peacehomesdevelopment.com/frontend/assets/images/banner/greenBG.jpg);}
+#p-inventory .page-head{--hero:radial-gradient(50% 100% at 100% 0%,color-mix(in srgb,var(--brand-primary) 40%,transparent),transparent 60%),linear-gradient(135deg,color-mix(in srgb,var(--banner-inventory) 45%,#000) 0%,var(--banner-inventory) 100%); background-image: url(https://peacehomesdevelopment.com/frontend/assets/images/banner/greenBG.jpg);}
+#p-profile .page-head{--hero:radial-gradient(50% 100% at 100% 0%,color-mix(in srgb,var(--banner-profile) 60%,#fff 20%),transparent 60%),linear-gradient(135deg,color-mix(in srgb,var(--banner-profile) 45%,#000) 0%,var(--banner-profile) 100%); background-image: url(https://peacehomesdevelopment.com/frontend/assets/images/banner/greenBG.jpg);}
+
+/* Logo */
+.logo{display:inline-flex;align-items:center;gap:10px;padding:7px 12px 7px 7px;border-radius:12px;box-shadow:0 0 0 1px color-mix(in srgb,var(--logo-color) 12%,transparent);max-width:100%}
+.logo img{display:block;height:var(--logo-height);width:auto;max-width:180px;object-fit:contain}
+.logo-mark{width:var(--logo-height);height:var(--logo-height);flex:none}
+.logo-text{display:flex;flex-direction:column;line-height:1.05;min-width:0}
+.logo-text strong{font-family:var(--font-heading);font-weight:800;font-size:1.1rem;letter-spacing:-.02em;white-space:nowrap}
+.logo-text span{margin-top:4px;font-size:.6rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;opacity:.75;white-space:nowrap}
+.logo-m{padding:10px 15px; background: #284d47;}
+@media (min-width:1024px){.logo-m{display:none}}
+
+/* Mobile: figure tiles in a 2-column grid, no sideways scrolling */
+@media (max-width:767px){
+  .kpis{grid-auto-flow:row;grid-template-columns:1fr 1fr;grid-auto-columns:auto;overflow:visible;margin-right:0;padding:0;gap:14px}
+  .kpi{padding:16px}
+  .kpi.is-key{grid-column:1 / -1;order:-1}
+  #p-home .kpi:last-child{grid-column:1 / -1}
+  .kpi-value{font-size:1.5rem}
+  .kpi-ic{width:40px;height:40px;margin-bottom:10px}
+  .topbar{gap:8px;padding:8px 12px}
+  .top-actions{gap:6px}
+}
+
+/* Brand settings panel */
+.brand-dlg{margin:0 0 0 auto;width:min(420px,100%);height:100%;max-height:100%;border-radius:0}
+.brand-dlg[open]{animation:none}
+.brand-dlg .dlg-body{height:100%;overflow-y:auto}
+.bs-group{margin-top:22px;padding-top:18px;border-top:1px solid var(--line-soft)}
+.bs-group h3{margin-bottom:12px}
+.bs-row{display:grid;grid-template-columns:1fr auto;align-items:center;gap:12px;padding:6px 0}
+.bs-row label{font-weight:600;font-size:.9rem;line-height:1.35}
+.bs-row small{display:block;font-weight:500;color:var(--muted);font-size:.78rem}
+.bs-color{display:flex;align-items:center;gap:8px}
+.bs-color input[type=color]{width:48px;height:48px;padding:3px;border:1px solid var(--line-soft);border-radius:10px;background:var(--surface);cursor:pointer}
+.bs-color code{font-size:.78rem;color:var(--muted);min-width:64px}
+.bs-logo-prev{display:flex;align-items:center;justify-content:center;min-height:80px;padding:14px;border:1px dashed var(--line-soft);border-radius:12px;background:var(--surface-2);margin-bottom:12px}
+.bs-actions{display:grid;gap:10px;margin-top:24px;padding-bottom:16px}
+@media (max-width:767px){.brand-dlg{margin:0;width:100%;height:100%;border-radius:0}.topbar .avatar{display:none}}
+@media (max-width:379px){.logo-m .logo-text strong{font-size:1rem}}
+</style>
+</head>
+<body>
+
+<!-- Icon sprite -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3.5 10.5 12 3.5l8.5 7V20a1 1 0 0 1-1 1H15v-6H9v6H4.5a1 1 0 0 1-1-1z"/></symbol>
+  <symbol id="i-pending" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
+  <symbol id="i-closed" viewBox="0 0 24 24"><path d="M5 4.5h14v15H5z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></symbol>
+  <symbol id="i-wallet" viewBox="0 0 24 24"><path d="M3.5 7.5h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1h-15a1 1 0 0 1-1-1z"/><path d="M3.5 7.5 16 4v3.5"/><path d="M15.5 13.5h2"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 24 24"><path d="M4 20V8l8-4 8 4v12"/><path d="M8 20v-4h3v4M13 20v-4h3v4M8 12h3M13 12h3"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4.5 20.5c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16.5V11a6 6 0 1 1 12 0v5.5l1.5 1.5h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M19.5 14.5A8 8 0 1 1 9.5 4.5a6.5 6.5 0 0 0 10 10z"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="M14.5 5.5 8 12l6.5 6.5"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="m6.5 9.5 5.5 5.5 5.5-5.5"/></symbol>
+  <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 15.5V4.5M7.5 9 12 4.5 16.5 9M4.5 15.5v4h15v-4"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24"><path d="M6 3.5h8l4 4v13H6z"/><path d="M14 3.5v4h4M9 13h6M9 16.5h6"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5v5.5M12 16.2v.3"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="4" y="5.5" width="16" height="14.5" rx="2"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20h16"/><path d="M7 16v-5M12 16V7M17 16v-8"/></symbol>
+  <symbol id="i-palette" viewBox="0 0 24 24"><path d="M12 3.5a8.5 8.5 0 1 0 0 17c1.2 0 1.8-.8 1.8-1.7 0-1.2-1-1.5-1-2.6 0-1 .8-1.7 1.8-1.7h2.1a3.8 3.8 0 0 0 3.8-3.8C20.5 6.9 16.7 3.5 12 3.5z"/><circle cx="7.5" cy="12" r="1.1"/><circle cx="9.5" cy="8" r="1.1"/><circle cx="14" cy="7.3" r="1.1"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+</svg>
+
+<!-- Page state (CSS-driven routing) -->
+<input class="tab-radio" type="radio" name="page" id="t-home" aria-label="Dashboard" checked>
+<input class="tab-radio" type="radio" name="page" id="t-pending" aria-label="Pending deals">
+<input class="tab-radio" type="radio" name="page" id="t-closed" aria-label="Closed deals">
+<input class="tab-radio" type="radio" name="page" id="t-payments" aria-label="Payments">
+<input class="tab-radio" type="radio" name="page" id="t-invoice" aria-label="Submit invoice" tabindex="-1">
+<input class="tab-radio" type="radio" name="page" id="t-inventory" aria-label="Inventory">
+<input class="tab-radio" type="radio" name="page" id="t-profile" aria-label="Profile">
+
+<div class="shell">
+  <aside class="sidebar">
+    <div>
+      <div class="logo" data-logo></div>
+      <p class="side-sub">Broker portal</p>
+    </div>
+    <nav class="side-nav" aria-label="Main">
+      <label for="t-home" class="nav-link" data-for="home"><svg class="ic"><use href="#i-home"/></svg>Dashboard</label>
+      <label for="t-pending" class="nav-link" data-for="pending"><svg class="ic"><use href="#i-pending"/></svg>Pending deals<span class="pill" data-bind="pipe-count">12</span></label>
+      <label for="t-closed" class="nav-link" data-for="closed"><svg class="ic"><use href="#i-closed"/></svg>Closed deals</label>
+      <label for="t-payments" class="nav-link" data-for="payments"><svg class="ic"><use href="#i-wallet"/></svg>Payments<span class="pill" data-bind="pay-actions">3</span></label>
+      <label for="t-inventory" class="nav-link" data-for="inventory"><svg class="ic"><use href="#i-grid"/></svg>Inventory</label>
+      <label for="t-profile" class="nav-link" data-for="profile"><svg class="ic"><use href="#i-user"/></svg>Profile &amp; KYC</label>
+    </nav>
+    <div class="side-help">
+      <strong>Partner desk</strong>
+      Questions about a payout? Call +971 4 555 0142, Sunday to Thursday, 9am to 6pm.
+    </div>
+  </aside>
+
+  <div class="main-col">
+    <header class="topbar">
+      <div class="logo logo-m" data-logo></div>
+      <p class="top-meta">Signed in as <strong>Rana Haddad</strong>, Haddad &amp; Co. Realty</p>
+      <div class="top-actions">
+        <!-- <button class="icon-btn" id="brand-btn" type="button" aria-label="Brand settings"><svg class="ic"><use href="#i-palette"/></svg></button> -->
+        <details class="notif" id="notif">
+          <summary class="icon-btn" aria-label="Notifications, 3 new"><svg class="ic"><use href="#i-bell"/></svg><span class="dot" aria-hidden="true">3</span></summary>
+          <div class="notif-panel card">
+            <h2>Notifications</h2>
+            <ul>
+              <li><div>SPA signed for B-201. Your commission invoice is ready to submit.<small>24 Oct 2026</small></div></li>
+              <li><div>Invoice INV-0309 for B-204 was returned. The TRN didn’t match.<small>22 Oct 2026</small></div></li>
+              <li><div>Your RERA broker card expires in 18 days.<small>21 Oct 2026</small></div></li>
+            </ul>
+          </div>
+        </details>
+        <label for="t-profile" class="avatar" title="Profile">RH</label>
+      </div>
+    </header>
+
+    <main id="main">
+
+      <!-- ================= DASHBOARD ================= -->
+      <section class="page" id="p-home" aria-labelledby="h-home">
+        <div class="page-head">
+          <div>
+            <p class="kicker" id="today-label">Tuesday, 27 October 2026</p>
+            <h1 id="h-home">Good morning, Rana</h1>
+            <p class="lede">Your pipeline, closed bookings and commission in one view.</p>
+          </div>
+          <button class="btn btn-primary" type="button" data-go="inventory"><svg class="ic ic-sm"><use href="#i-plus"/></svg>New sales offer</button>
+        </div>
+
+        <div class="action-banner" id="action-banner">
+          <svg class="ic" aria-hidden="true"><use href="#i-alert"/></svg>
+          <p id="banner-text"><strong>2 deals have a signed SPA.</strong> Submit your invoices to release AED&nbsp;8,200 in commission. 1 returned invoice also needs fixing.</p>
+          <button class="btn" type="button" data-go="payments">Open payments</button>
+        </div>
+
+        <div class="kpis section" role="list">
+          <article class="card kpi k-sapphire" role="listitem">
+            <span class="kpi-ic" aria-hidden="true"><svg class="ic"><use href="#i-pending"/></svg></span>
+            <p class="kpi-label">Pipeline deals</p>
+            <p class="kpi-value" data-bind="pipe-count">12</p>
+            <p class="kpi-sub"><span data-bind="pipe-value">AED 2,310,000</span> in open deal value</p>
+          </article>
+          <article class="card kpi k-emerald" role="listitem">
+            <span class="kpi-ic" aria-hidden="true"><svg class="ic"><use href="#i-wallet"/></svg></span>
+            <p class="kpi-label">Commission received</p>
+            <p class="kpi-value"><small>AED</small>13,900</p>
+            <p class="kpi-sub">4 payouts, the latest on 18 Jun 2026</p>
+          </article>
+          <article class="card kpi is-key" role="listitem">
+            <span class="kpi-ic" aria-hidden="true"><svg class="ic"><use href="#i-wallet"/></svg></span>
+            <p class="kpi-label">Eligible for commission</p>
+            <p class="kpi-value"><small>AED</small><span data-bind="elig-amt">8,200</span></p>
+            <p class="kpi-sub"><span data-bind="elig-count">2 deals</span> with a signed SPA</p>
+            <button class="btn btn-sm" type="button" data-go="payments">Submit invoices</button>
+          </article>
+          <article class="card kpi k-plum" role="listitem">
+            <span class="kpi-ic" aria-hidden="true"><svg class="ic"><use href="#i-closed"/></svg></span>
+            <p class="kpi-label">Deals closed</p>
+            <p class="kpi-value">9</p>
+            <p class="kpi-sub">AED 1,555,000 booked to date</p>
+          </article>
+          <article class="card kpi k-coral" role="listitem">
+            <span class="kpi-ic" aria-hidden="true"><svg class="ic"><use href="#i-cal"/></svg></span>
+            <p class="kpi-label">Closed this month</p>
+            <p class="kpi-value">2</p>
+            <p class="kpi-sub">AED 295,000 in October</p>
+          </article>
+          <article class="card kpi k-gold" role="listitem">
+            <span class="kpi-ic" aria-hidden="true"><svg class="ic"><use href="#i-chart"/></svg></span>
+            <p class="kpi-label">Closed this year</p>
+            <p class="kpi-value">7</p>
+            <p class="kpi-sub">AED 1,220,000 in 2026</p>
+          </article>
+        </div>
+
+        <div class="grid-2 section">
+          <section class="card" aria-labelledby="h-chart">
+            <div class="card-head">
+              <h2 id="h-chart">Booked value in 2026</h2>
+              <p>Thousands of AED, by month</p>
+            </div>
+            <div class="chart" role="img" aria-label="Booked value by month in 2026: February 220 thousand, April 140, June 210, July 125, August 230, October 295 thousand dirhams. No bookings in January, March, May or September.">
+              <div class="bar" style="--v:0"></div>
+              <div class="bar" style="--v:.746"><b>220k</b></div>
+              <div class="bar" style="--v:0"></div>
+              <div class="bar" style="--v:.475"><b>140k</b></div>
+              <div class="bar" style="--v:0"></div>
+              <div class="bar" style="--v:.712"><b>210k</b></div>
+              <div class="bar" style="--v:.424"><b>125k</b></div>
+              <div class="bar" style="--v:.78"><b>230k</b></div>
+              <div class="bar" style="--v:0"></div>
+              <div class="bar is-max" style="--v:1"><b>295k</b></div>
+            </div>
+            <div class="chart-x" aria-hidden="true"><span>J</span><span>F</span><span>M</span><span>A</span><span>M</span><span>J</span><span>J</span><span>A</span><span>S</span><span>O</span></div>
+          </section>
+
+          <section class="card" aria-labelledby="h-stage">
+            <div class="card-head">
+              <h2 id="h-stage">Pipeline by stage</h2>
+              <button class="link" type="button" data-go="pending">See all deals</button>
+            </div>
+            <div class="stackbar" aria-hidden="true" id="stackbar"></div>
+            <ul class="legend" id="stage-legend"></ul>
+          </section>
+        </div>
+
+        <div class="grid-2 section">
+          <section class="card" aria-labelledby="h-act">
+            <div class="card-head"><h2 id="h-act">Recent activity</h2></div>
+            <ul class="feed">
+              <li><p>Saif Al Ketbi signed KYC for A-104.</p><time>Today, 10:42</time><span class="badge is-info">Pending deal</span></li>
+              <li><p>Sophie Laurent signed the SPA for B-201.</p><time>24 Oct</time><span class="badge is-action">Commission eligible</span></li>
+              <li><p>Invoice INV-0309 for B-204 was returned: TRN mismatch.</p><time>22 Oct</time><span class="badge is-err">Needs fixing</span></li>
+              <li><p>Invoice INV-0318 for A-108 was submitted.</p><time>15 Oct</time><span class="badge is-neutral">In review</span></li>
+              <li><p>New booking B-2031 for A-102, Fatima Al Hammadi.</p><time>12 Oct</time><span class="badge is-ok">Closed deal</span></li>
+            </ul>
+          </section>
+          <section class="card" aria-labelledby="h-journey">
+            <div class="card-head"><h2 id="h-journey">How a deal pays out</h2></div>
+            <ol class="journey">
+              <li><div><strong>Generate a sales offer</strong><span>Pick an available unit in Inventory.</span></div></li>
+              <li><div><strong>Client completes CIF and KYC</strong><span>Tracked in Pending deals.</span></div></li>
+              <li><div><strong>Booking and deposit</strong><span>The deal moves to Closed deals.</span></div></li>
+              <li class="is-key"><div><strong>SPA signed</strong><span>Your commission becomes eligible.</span></div></li>
+              <li class="is-key"><div><strong>Submit your invoice</strong><span>From Payments, with your TRN.</span></div></li>
+              <li><div><strong>Commission paid</strong><span>Usually within 10 business days of approval.</span></div></li>
+            </ol>
+          </section>
+        </div>
+      </section>
+
+      <!-- ================= PENDING DEALS ================= -->
+      <section class="page" id="p-pending" aria-labelledby="h-pending">
+        <div class="page-head">
+          <div>
+            <h1 id="h-pending">Pending deals</h1>
+            <p class="lede"><span data-bind="pipe-count">12</span> open opportunities worth <span data-bind="pipe-value">AED 2,310,000</span>, from first qualification to signed KYC.</p>
+          </div>
+          <button class="btn btn-primary" type="button" data-go="inventory"><svg class="ic ic-sm"><use href="#i-plus"/></svg>New sales offer</button>
+        </div>
+
+        <input class="f-radio" type="radio" name="stagef" id="s-all" checked aria-label="All stages">
+        <input class="f-radio" type="radio" name="stagef" id="s-qualified" aria-label="Qualified">
+        <input class="f-radio" type="radio" name="stagef" id="s-offer" aria-label="Sales offer sent">
+        <input class="f-radio" type="radio" name="stagef" id="s-cif" aria-label="CIF completed">
+        <input class="f-radio" type="radio" name="stagef" id="s-kyc" aria-label="KYC signed">
+        <input class="f-radio" type="radio" name="stagef" id="s-expired" aria-label="Offer expired">
+        <div class="chips" aria-hidden="true">
+          <label class="chip" for="s-all">All <span class="count" data-count="all">12</span></label>
+          <label class="chip" for="s-qualified">Qualified <span class="count" data-count="qualified">4</span></label>
+          <label class="chip" for="s-offer">Sales offer sent <span class="count" data-count="offer">3</span></label>
+          <label class="chip" for="s-cif">CIF completed <span class="count" data-count="cif">3</span></label>
+          <label class="chip" for="s-kyc">KYC signed <span class="count" data-count="kyc">2</span></label>
+          <label class="chip" for="s-expired">Offer expired <span class="count">0</span></label>
+        </div>
+
+        <div class="table-wrap">
+          <table class="data">
+            <thead><tr><th scope="col">Client</th><th scope="col">Unit</th><th scope="col">Stage</th><th scope="col" class="num">Deal value</th><th scope="col">Updated</th><th scope="col">Next step</th></tr></thead>
+            <tbody id="pending-body"></tbody>
+          </table>
+        </div>
+
+        <div class="empty empty-expired">
+          <svg class="art" viewBox="0 0 120 96" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 86V34l28-16 28 16v52"/><path d="M34 86V64h28v22"/><path d="M36 46h24"/><circle class="acc" cx="88" cy="30" r="16"/><path class="acc" d="M88 22v9l6 4"/></svg>
+          <h3>No expired offers</h3>
+          <p>Every sales offer you’ve sent is still within its validity window. Offers expire 7 days after they’re generated.</p>
+          <label class="btn" for="s-all">Show all deals</label>
+        </div>
+      </section>
+
+      <!-- ================= CLOSED DEALS ================= -->
+      <section class="page" id="p-closed" aria-labelledby="h-closed">
+        <div class="page-head">
+          <div>
+            <h1 id="h-closed">Closed deals</h1>
+            <p class="lede">Bookings you’ve brought in, and how much each buyer has paid so far. Open a booking to see its payment plan.</p>
+          </div>
+        </div>
+
+        <div class="kpis" role="list" style="margin-bottom:24px">
+          <article class="card kpi is-key" role="listitem">
+            <span class="kpi-ic" aria-hidden="true"><svg class="ic"><use href="#i-wallet"/></svg></span>
+            <p class="kpi-label">Total amount received</p>
+            <p class="kpi-value"><small>AED</small>856,500</p>
+            <p class="kpi-sub">55% of AED 1,555,000 booked</p>
+          </article>
+          <article class="card kpi k-sapphire" role="listitem">
+            <span class="kpi-ic" aria-hidden="true"><svg class="ic"><use href="#i-closed"/></svg></span>
+            <p class="kpi-label">Bookings</p>
+            <p class="kpi-value">9</p>
+            <p class="kpi-sub">7 this year, 2 this month</p>
+          </article>
+          <article class="card kpi k-emerald" role="listitem">
+            <span class="kpi-ic" aria-hidden="true"><svg class="ic"><use href="#i-check"/></svg></span>
+            <p class="kpi-label">Fully paid</p>
+            <p class="kpi-value">2</p>
+            <p class="kpi-sub">Handed over to buyers</p>
+          </article>
+        </div>
+
+        <input class="f-radio" type="radio" name="closedf" id="c-all" checked aria-label="All bookings">
+        <input class="f-radio" type="radio" name="closedf" id="c-year" aria-label="This year">
+        <input class="f-radio" type="radio" name="closedf" id="c-month" aria-label="This month">
+        <div class="chips" aria-hidden="true">
+          <label class="chip" for="c-all">All time <span class="count">9</span></label>
+          <label class="chip" for="c-year">This year <span class="count">7</span></label>
+          <label class="chip" for="c-month">This month <span class="count">2</span></label>
+        </div>
+
+        <div class="bookings">
+          <div class="b-headrow" aria-hidden="true"><span>Booking</span><span>Client</span><span>Unit</span><span class="num">Unit price</span><span class="num">Received</span><span>Paid</span><span></span></div>
+          <div id="bookings-list"></div>
+        </div>
+      </section>
+
+      <!-- ================= PAYMENTS ================= -->
+      <section class="page" id="p-payments" aria-labelledby="h-payments">
+        <div class="page-head">
+          <div>
+            <h1 id="h-payments">Payments</h1>
+            <p class="lede">Your commission on each booking. Once the SPA is signed, submit an invoice to get paid.</p>
+          </div>
+        </div>
+
+        <div class="kpis" role="list" style="margin-bottom:24px">
+          <article class="card kpi is-key" role="listitem">
+            <span class="kpi-ic" aria-hidden="true"><svg class="ic"><use href="#i-upload"/></svg></span>
+            <p class="kpi-label">Ready to invoice</p>
+            <p class="kpi-value"><small>AED</small><span data-bind="elig-amt">8,200</span></p>
+            <p class="kpi-sub"><span data-bind="elig-count">2 deals</span> with a signed SPA</p>
+          </article>
+          <article class="card kpi k-sapphire" role="listitem">
+            <span class="kpi-ic" aria-hidden="true"><svg class="ic"><use href="#i-pending"/></svg></span>
+            <p class="kpi-label">In review</p>
+            <p class="kpi-value"><small>AED</small><span data-bind="review-amt">2,500</span></p>
+            <p class="kpi-sub">Finance reviews within 3 business days</p>
+          </article>
+          <article class="card kpi k-emerald" role="listitem">
+            <span class="kpi-ic" aria-hidden="true"><svg class="ic"><use href="#i-check"/></svg></span>
+            <p class="kpi-label">Paid to you</p>
+            <p class="kpi-value"><small>AED</small>13,900</p>
+            <p class="kpi-sub">Across 4 bookings</p>
+          </article>
+        </div>
+
+        <div class="table-wrap">
+          <table class="data">
+            <thead><tr><th scope="col">Unit and client</th><th scope="col">Project</th><th scope="col">Booking</th><th scope="col" class="num">Commission</th><th scope="col">Status</th><th scope="col">Action</th></tr></thead>
+            <tbody id="pay-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ================= INVOICE ================= -->
+      <section class="page" id="p-invoice" aria-labelledby="h-invoice">
+        <button class="back" type="button" data-go="payments"><svg class="ic"><use href="#i-back"/></svg>Payments</button>
+        <div class="page-head">
+          <div>
+            <h1 id="h-invoice">Submit invoice</h1>
+            <p class="lede">Upload your commission invoice for this booking. We’ll check it against your registered VAT details.</p>
+          </div>
+        </div>
+
+        <div class="empty" id="ivc-empty">
+          <svg class="art" viewBox="0 0 120 96" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M34 10h38l16 16v60H34z"/><path d="M72 10v16h16"/><path d="M46 46h30M46 58h30M46 70h18"/><circle class="acc" cx="30" cy="70" r="14"/><path class="acc" d="m24 70 4 4 8-8"/></svg>
+          <h3>Choose a booking to invoice</h3>
+          <p>Invoices are submitted per booking. Go to Payments and pick a deal with a signed SPA.</p>
+          <button class="btn btn-primary" type="button" data-go="payments">Go to payments</button>
+        </div>
+
+        <div class="inv-grid" id="ivc-wrap" hidden>
+          <div class="card">
+            <div id="ivc-form-area">
+              <div class="note is-err" id="ivc-returned" hidden style="margin-bottom:20px">
+                <svg class="ic" aria-hidden="true"><use href="#i-alert"/></svg>
+                <p id="ivc-returned-text"></p>
+              </div>
+              <div class="err-summary" id="ivc-errors" tabindex="-1" role="alert" hidden>
+                <h2>Fix these to submit your invoice</h2>
+                <ul id="ivc-error-list"></ul>
+              </div>
+              <form id="ivc-form" novalidate>
+                <div class="form-grid">
+                  <div class="field">
+                    <label class="label" for="i-no">Invoice number</label>
+                    <input class="input" id="i-no" name="no" autocomplete="off" placeholder="e.g. HCR-2026-041" aria-describedby="i-no-err">
+                    <p class="field-error" id="i-no-err" hidden></p>
+                  </div>
+                  <div class="field">
+                    <label class="label" for="i-date">Invoice date</label>
+                    <input class="input" id="i-date" name="date" type="date" aria-describedby="i-date-err">
+                    <p class="field-error" id="i-date-err" hidden></p>
+                  </div>
+                  <div class="field">
+                    <label class="label" for="i-amount">Amount, excluding VAT (AED)</label>
+                    <input class="input num" style="text-align:left" id="i-amount" name="amount" inputmode="decimal" aria-describedby="i-amount-hint i-amount-err">
+                    <p class="hint" id="i-amount-hint">Must match the eligible commission shown in the summary.</p>
+                    <p class="field-error" id="i-amount-err" hidden></p>
+                  </div>
+                  <div class="field">
+                    <label class="label" for="i-trn">Tax registration number (TRN)</label>
+                    <input class="input" id="i-trn" name="trn" inputmode="numeric" autocomplete="off" value="100 4127 7891 0003" aria-describedby="i-trn-hint i-trn-err">
+                    <p class="hint" id="i-trn-hint">15 digits, as printed on your VAT certificate.</p>
+                    <p class="field-error" id="i-trn-err" hidden></p>
+                  </div>
+                  <div class="field span-2" id="file-field">
+                    <span class="label" id="i-file-label">Invoice file</span>
+                    <label class="drop" id="drop">
+                      <input class="vh" type="file" id="i-file" accept=".pdf,.png,.jpg,.jpeg" aria-labelledby="i-file-label" aria-describedby="i-file-hint i-file-err">
+                      <svg class="ic" aria-hidden="true"><use href="#i-upload"/></svg>
+                      <strong>Drop your invoice here, or browse</strong>
+                      <span id="i-file-hint">PDF, PNG or JPG, up to 5 MB</span>
+                    </label>
+                    <div id="file-chip"></div>
+                    <p class="field-error" id="i-file-err" hidden></p>
+                  </div>
+                  <div class="field span-2">
+                    <label class="check"><input type="checkbox" id="i-dec" aria-describedby="i-dec-err"><span>I confirm this invoice is addressed to Peace Homes Development LLC and matches the booking shown.</span></label>
+                    <p class="field-error" id="i-dec-err" hidden></p>
+                  </div>
+                  <div class="span-2 btn-row">
+                    <button class="btn btn-primary" type="submit"><svg class="ic ic-sm"><use href="#i-upload"/></svg>Submit invoice</button>
+                    <button class="btn btn-ghost" type="button" data-go="payments">Cancel</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="success" id="ivc-success" hidden>
+              <span class="tick"><svg class="ic"><use href="#i-check"/></svg></span>
+              <h2 tabindex="-1" id="ivc-success-h">Invoice submitted</h2>
+              <p id="ivc-success-text"></p>
+              <div class="btn-row">
+                <button class="btn btn-primary" type="button" data-go="payments">Back to payments</button>
+                <button class="btn btn-ghost" type="button" data-go="home">Go to dashboard</button>
+              </div>
+            </div>
+          </div>
+
+          <aside class="card inv-summary" aria-labelledby="h-sum">
+            <div class="card-head"><h2 id="h-sum">Booking summary</h2></div>
+            <dl style="margin:0">
+              <div class="kv"><dt>Unit</dt><dd id="sum-unit"></dd></div>
+              <div class="kv"><dt>Client</dt><dd id="sum-client"></dd></div>
+              <div class="kv"><dt>Project</dt><dd id="sum-project"></dd></div>
+              <div class="kv"><dt>Booking</dt><dd id="sum-booking"></dd></div>
+              <div class="kv"><dt>Commission (2%)</dt><dd id="sum-comm"></dd></div>
+              <div class="kv"><dt>VAT (5%)</dt><dd id="sum-vat"></dd></div>
+              <div class="kv total"><dt>Invoice total</dt><dd id="sum-total"></dd></div>
+            </dl>
+          </aside>
+        </div>
+      </section>
+
+      <!-- ================= INVENTORY ================= -->
+      <section class="page" id="p-inventory" aria-labelledby="h-inventory">
+        <div class="page-head">
+          <div>
+            <h1 id="h-inventory">Inventory</h1>
+            <p class="lede">Live availability across Peace Homes projects. Generate a sales offer for any available unit.</p>
+          </div>
+        </div>
+
+        <div class="card filters">
+          <div class="field">
+            <label class="label" for="f-project">Project</label>
+            <div class="select"><select id="f-project"><option>Peace Heights</option><option>Peace Gardens</option></select></div>
+          </div>
+          <div class="field">
+            <label class="label" for="f-tower">Tower</label>
+            <div class="select"><select id="f-tower"></select></div>
+          </div>
+          <div class="field">
+            <label class="label" for="f-beds">Unit type</label>
+            <div class="select"><select id="f-beds"><option value="all">All types</option><option value="studio">Studio</option><option value="1">1 bedroom</option><option value="2">2 bedroom</option><option value="3">3 bedroom</option></select></div>
+          </div>
+          <label class="switch"><input type="checkbox" id="f-avail"><span class="track" aria-hidden="true"></span>Available only</label>
+        </div>
+
+        <p class="results" aria-live="polite"><span id="inv-count"></span></p>
+
+        <div class="table-wrap" id="inv-table">
+          <table class="data">
+            <thead><tr><th scope="col">Unit</th><th scope="col">Floor plan</th><th scope="col">Type</th><th scope="col" class="num">Area</th><th scope="col" class="num">Price</th><th scope="col">Status</th><th scope="col">Sales offer</th></tr></thead>
+            <tbody id="inv-body"></tbody>
+          </table>
+        </div>
+
+        <div class="empty" id="inv-empty-release" hidden>
+          <svg class="art" viewBox="0 0 120 96" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M30 86V22h34v64"/><path d="M64 40h26v46"/><path d="M40 34h6M50 34h6M40 46h6M50 46h6M40 58h6M50 58h6M72 52h8M72 64h8"/><path class="acc" d="M10 86h100" stroke-dasharray="6 6"/></svg>
+          <h3>No units released in this tower yet</h3>
+          <p>Garden One opens for sale in Q1 2027. We’ll let you know the moment units go live, so you can line up buyers early.</p>
+          <button class="btn btn-primary" type="button" id="notify-btn">Notify me at launch</button>
+        </div>
+        <div class="empty" id="inv-empty-filter" hidden>
+          <svg class="art" viewBox="0 0 120 96" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="52" cy="44" r="24"/><path d="m70 62 18 18"/><path class="acc" d="M42 44h20"/></svg>
+          <h3>No units match these filters</h3>
+          <p>Try another unit type, or include units that are on hold.</p>
+          <button class="btn" type="button" id="reset-filters">Reset filters</button>
+        </div>
+      </section>
+
+      <!-- ================= PROFILE ================= -->
+      <section class="page" id="p-profile" aria-labelledby="h-profile">
+        <div class="page-head">
+          <div>
+            <h1 id="h-profile">Profile and KYC</h1>
+            <p class="lede">Keep your documents current. Commission can only be paid while your KYC is fully verified.</p>
+          </div>
+        </div>
+
+        <div class="profile-grid">
+          <aside class="card id-card">
+            <span class="avatar-lg" aria-hidden="true">RH</span>
+            <div>
+              <h2>Rana Haddad</h2>
+              <p class="muted">Senior broker, Haddad &amp; Co. Realty</p>
+            </div>
+            <dl class="id-facts">
+              <div><dt>Broker ID</dt><dd>BRK-00412</dd></div>
+              <div><dt>RERA BRN</dt><dd>48213</dd></div>
+              <div><dt>Agency ORN</dt><dd>21877</dd></div>
+              <div><dt>Member since</dt><dd>Mar 2024</dd></div>
+            </dl>
+            <div class="kyc-meter">
+              <p id="kyc-summary"><strong>2 of 5 verified.</strong> 3 documents need action.</p>
+              <span class="prog"><i id="kyc-bar" style="width:40%"></i></span>
+            </div>
+          </aside>
+
+          <div style="display:grid;gap:24px;min-width:0">
+            <section class="card" aria-labelledby="h-kyc">
+              <div class="card-head"><h2 id="h-kyc">KYC documents</h2><p>PDF, PNG or JPG up to 5 MB</p></div>
+              <ul class="docs" id="docs">
+                <li class="doc" data-state="verified">
+                  <span class="doc-ic"><svg class="ic"><use href="#i-file"/></svg></span>
+                  <div class="doc-main"><p class="doc-title">Emirates ID</p><p class="doc-meta">Valid until 14 Mar 2028</p><p class="doc-msg" hidden></p></div>
+                  <span class="badge is-ok">Verified</span>
+                  <label class="btn btn-sm btn-ghost">Replace<input class="vh" type="file" accept=".pdf,.png,.jpg,.jpeg"></label>
+                </li>
+                <li class="doc" data-state="verified">
+                  <span class="doc-ic"><svg class="ic"><use href="#i-file"/></svg></span>
+                  <div class="doc-main"><p class="doc-title">Passport</p><p class="doc-meta">Valid until 2 Aug 2031</p><p class="doc-msg" hidden></p></div>
+                  <span class="badge is-ok">Verified</span>
+                  <label class="btn btn-sm btn-ghost">Replace<input class="vh" type="file" accept=".pdf,.png,.jpg,.jpeg"></label>
+                </li>
+                <li class="doc" data-state="expiring">
+                  <span class="doc-ic"><svg class="ic"><use href="#i-file"/></svg></span>
+                  <div class="doc-main"><p class="doc-title">RERA broker card</p><p class="doc-meta">Expires 14 Nov 2026</p><p class="doc-msg is-warn">Upload your renewed card before it expires to keep payouts flowing.</p></div>
+                  <span class="badge is-warn">Expires in 18 days</span>
+                  <label class="btn btn-sm">Upload renewal<input class="vh" type="file" accept=".pdf,.png,.jpg,.jpeg"></label>
+                </li>
+                <li class="doc" data-state="rejected">
+                  <span class="doc-ic"><svg class="ic"><use href="#i-file"/></svg></span>
+                  <div class="doc-main"><p class="doc-title">Agency trade licence</p><p class="doc-meta">Uploaded 19 Oct 2026</p><p class="doc-msg is-err">The scan is too blurred to read the licence number. Upload a clear, full-page copy.</p></div>
+                  <span class="badge is-err">Rejected</span>
+                  <label class="btn btn-sm btn-primary">Upload again<input class="vh" type="file" accept=".pdf,.png,.jpg,.jpeg"></label>
+                </li>
+                <li class="doc" data-state="missing">
+                  <span class="doc-ic"><svg class="ic"><use href="#i-file"/></svg></span>
+                  <div class="doc-main"><p class="doc-title">VAT registration certificate</p><p class="doc-meta">Required to invoice commission with VAT</p><p class="doc-msg" hidden></p></div>
+                  <span class="badge is-neutral">Not uploaded</span>
+                  <label class="btn btn-sm">Upload<input class="vh" type="file" accept=".pdf,.png,.jpg,.jpeg"></label>
+                </li>
+              </ul>
+            </section>
+
+            <section class="card" aria-labelledby="h-pd">
+              <input class="vh" type="checkbox" id="edit-profile" aria-label="Edit personal details">
+              <div class="card-head">
+                <h2 id="h-pd">Personal details</h2>
+                <label class="btn btn-sm btn-ghost edit-btn" for="edit-profile">Edit details</label>
+              </div>
+              <dl class="dl-grid pd-view">
+                <div><dt>Full name</dt><dd>Rana Haddad</dd></div>
+                <div><dt>Email</dt><dd data-pd="email">rana.haddad@haddadrealty.ae</dd></div>
+                <div><dt>Mobile</dt><dd data-pd="phone">+971 50 412 7789</dd></div>
+                <div><dt>Alternate email</dt><dd data-pd="alt">Not added</dd></div>
+                <div><dt>Agency</dt><dd>Haddad &amp; Co. Realty LLC</dd></div>
+                <div><dt>Office address</dt><dd>Office 1204, Bay Square 7, Business Bay, Dubai</dd></div>
+              </dl>
+              <form class="form-grid pd-form" id="pd-form" novalidate>
+                <div class="field">
+                  <label class="label" for="pd-email">Email</label>
+                  <input class="input" id="pd-email" type="email" value="rana.haddad@haddadrealty.ae" aria-describedby="pd-email-err">
+                  <p class="field-error" id="pd-email-err" hidden></p>
+                </div>
+                <div class="field">
+                  <label class="label" for="pd-phone">Mobile</label>
+                  <input class="input" id="pd-phone" type="tel" value="+971 50 412 7789" aria-describedby="pd-phone-hint pd-phone-err">
+                  <p class="hint" id="pd-phone-hint">UAE mobile, starting +971 5</p>
+                  <p class="field-error" id="pd-phone-err" hidden></p>
+                </div>
+                <div class="field span-2">
+                  <label class="label" for="pd-alt">Alternate email <span class="opt">(optional)</span></label>
+                  <input class="input" id="pd-alt" type="email" aria-describedby="pd-alt-err">
+                  <p class="field-error" id="pd-alt-err" hidden></p>
+                </div>
+                <div class="span-2 btn-row">
+                  <button class="btn btn-primary" type="submit">Save changes</button>
+                  <label class="btn btn-ghost" for="edit-profile">Cancel</label>
+                </div>
+              </form>
+            </section>
+
+            <section class="card" aria-labelledby="h-bank">
+              <div class="card-head"><h2 id="h-bank">Payout account</h2><p>Changes need re-verification</p></div>
+              <dl class="dl-grid">
+                <div><dt>Bank</dt><dd>Emirates NBD</dd></div>
+                <div><dt>Account name</dt><dd>Haddad &amp; Co. Realty LLC</dd></div>
+                <div><dt>IBAN</dt><dd>AE07 0331 •••• •••• •••• 4521</dd></div>
+                <div><dt>Status</dt><dd><span class="badge is-ok">Verified</span></dd></div>
+              </dl>
+            </section>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <nav class="bottom-nav" aria-label="Main">
+    <label for="t-home" class="bn-link" data-for="home"><svg class="ic"><use href="#i-home"/></svg>Home</label>
+    <label for="t-pending" class="bn-link" data-for="pending"><svg class="ic"><use href="#i-pending"/></svg>Pending</label>
+    <label for="t-closed" class="bn-link" data-for="closed"><svg class="ic"><use href="#i-closed"/></svg>Closed</label>
+    <label for="t-payments" class="bn-link" data-for="payments"><svg class="ic"><use href="#i-wallet"/></svg>Payouts</label>
+    <label for="t-inventory" class="bn-link" data-for="inventory"><svg class="ic"><use href="#i-grid"/></svg>Units</label>
+    <label for="t-profile" class="bn-link" data-for="profile"><svg class="ic"><use href="#i-user"/></svg>Profile</label>
+  </nav>
+</div>
+
+<!-- Sales offer dialog -->
+<dialog id="offer-dlg" aria-labelledby="offer-h">
+  <form class="dlg-body" id="offer-form" novalidate>
+    <div class="dlg-head">
+      <div><h2 id="offer-h">Generate sales offer</h2><p id="offer-unit"></p></div>
+      <button class="dlg-close" type="button" id="offer-close" aria-label="Close">×</button>
+    </div>
+    <div class="form-grid" style="grid-template-columns:1fr">
+      <div class="field">
+        <label class="label" for="o-name">Client’s full name</label>
+        <input class="input" id="o-name" autocomplete="off" aria-describedby="o-name-err">
+        <p class="field-error" id="o-name-err" hidden></p>
+      </div>
+      <div class="field">
+        <label class="label" for="o-email">Client’s email</label>
+        <input class="input" id="o-email" type="email" autocomplete="off" aria-describedby="o-email-hint o-email-err">
+        <p class="hint" id="o-email-hint">We’ll send the offer PDF here. It stays valid for 7 days.</p>
+        <p class="field-error" id="o-email-err" hidden></p>
+      </div>
+      <div class="field">
+        <label class="label" for="o-plan">Payment plan</label>
+        <div class="select"><select id="o-plan"><option>Standard: 10 / 10 / 30 / 50</option><option>Post-handover: 40 / 60</option></select></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" type="submit">Generate and send offer</button>
+        <button class="btn btn-ghost" type="button" id="offer-cancel">Cancel</button>
+      </div>
+    </div>
+  </form>
+</dialog>
+
+
+<!-- Brand settings panel -->
+<dialog id="brand-dlg" class="brand-dlg" aria-labelledby="bs-h">
+  <div class="dlg-body">
+    <div class="dlg-head">
+      <div><h2 id="bs-h">Brand settings</h2><p>Changes show instantly. Download the HTML to keep them.</p></div>
+      <button class="dlg-close" type="button" id="bs-close" aria-label="Close">×</button>
+    </div>
+
+    <div class="bs-group" style="margin-top:0;border-top:0;padding-top:0">
+      <h3>Logo</h3>
+      <div class="bs-logo-prev"><div class="logo" data-logo></div></div>
+      <div class="btn-row" style="margin-top:0">
+        <label class="btn btn-sm btn-primary">Upload logo<input class="vh" type="file" id="bs-logo" accept="image/png,image/jpeg,image/svg+xml,image/webp"></label>
+        <button class="btn btn-sm btn-ghost" type="button" id="bs-logo-clear">Use built-in mark</button>
+      </div>
+      <p class="field-error" id="bs-logo-err" hidden></p>
+      <div class="form-grid" style="grid-template-columns:1fr;margin-top:16px;gap:14px">
+        <div class="field"><label class="label" for="bs-name">Name</label><input class="input" id="bs-name"></div>
+        <div class="field"><label class="label" for="bs-tag">Tagline</label><input class="input" id="bs-tag"></div>
+        <label class="check" style="padding:0"><input type="checkbox" id="bs-show"><span>Show name and tagline next to the logo</span></label>
+      </div>
+    </div>
+
+    <div class="bs-group" id="bs-colors"></div>
+
+    <div class="bs-actions">
+      <button class="btn btn-primary" type="button" id="bs-download">Download HTML with these settings</button>
+      <button class="btn" type="button" id="bs-copy">Copy settings CSS</button>
+      <button class="btn btn-ghost" type="button" id="bs-reset">Reset to file defaults</button>
+    </div>
+  </div>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+const ORIGINAL_HTML = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+(() => {
+  'use strict';
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const fmt = n => Number(n).toLocaleString('en-US');
+  const aed = n => 'AED\u00a0' + fmt(n);
+  const aed2 = n => 'AED\u00a0' + Number(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const today = new Date();
+  const dShort = d => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+  const iso = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+
+  /* ---------- Data ---------- */
+  const STAGES = {
+    qualified: { label: 'Qualified', step: 1, next: 'Generate a sales offer' },
+    offer: { label: 'Sales offer sent', step: 2, next: 'Client completes CIF' },
+    cif: { label: 'CIF completed', step: 3, next: 'Client signs KYC' },
+    kyc: { label: 'KYC signed', step: 4, next: 'Ready for booking' }
+  };
+  const pending = [
+    { name: 'Saif Al Ketbi', email: 'saif.alketbi@mail.ae', unit: 'A-104', stage: 'kyc', value: 200000, updated: 'Today' },
+    { name: 'Priya Menon', email: 'priya.menon@outlook.com', unit: 'A-101', stage: 'cif', value: 110000, updated: '26 Oct' },
+    { name: 'Omar Haddad', email: 'omar.h@gmail.com', unit: 'A-112', stage: 'kyc', value: 185000, updated: '25 Oct' },
+    { name: 'Lena Fischer', email: 'lena.fischer@web.de', unit: 'A-105', stage: 'offer', value: 250000, updated: '25 Oct' },
+    { name: 'Yousef Al Mansoori', email: 'y.mansoori@mail.ae', unit: 'B-208', stage: 'qualified', value: 240000, updated: '24 Oct' },
+    { name: 'Daniel Okafor', email: 'd.okafor@proton.me', unit: 'A-103', stage: 'cif', value: 120000, updated: '23 Oct' },
+    { name: 'Mariam Aziz', email: 'mariam.aziz@gmail.com', unit: 'A-110', stage: 'offer', value: 110000, updated: '22 Oct' },
+    { name: 'Hassan Rahimi', email: 'h.rahimi@yahoo.com', unit: 'B-209', stage: 'qualified', value: 320000, updated: '21 Oct' },
+    { name: 'Chen Wei', email: 'chen.wei@qq.com', unit: 'B-207', stage: 'cif', value: 215000, updated: '20 Oct' },
+    { name: 'Aisha Bello', email: 'aisha.bello@gmail.com', unit: 'A-115', stage: 'qualified', value: 145000, updated: '18 Oct' },
+    { name: 'Tomasz Nowak', email: 't.nowak@wp.pl', unit: 'B-212', stage: 'offer', value: 260000, updated: '17 Oct' },
+    { name: 'Noura Saeed', email: 'noura.saeed@mail.ae', unit: 'B-213', stage: 'qualified', value: 155000, updated: '15 Oct' }
+  ];
+  const bookings = [
+    { id: 'B-2031', client: 'Fatima Al Hammadi', unit: 'A-102', date: '12 Oct 2026', year: 2026, month: 1, price: 115000, recv: 23000 },
+    { id: 'B-2028', client: 'Ravi Iyer', unit: 'A-106', date: '3 Oct 2026', year: 2026, month: 1, price: 180000, recv: 36000 },
+    { id: 'B-2019', client: 'Sophie Laurent', unit: 'B-201', date: '14 Aug 2026', year: 2026, month: 0, price: 230000, recv: 115000 },
+    { id: 'B-2014', client: 'Khalid Nasser', unit: 'A-108', date: '2 Jul 2026', year: 2026, month: 0, price: 125000, recv: 62500 },
+    { id: 'B-2009', client: 'Anna Petrova', unit: 'B-204', date: '18 Jun 2026', year: 2026, month: 0, price: 210000, recv: 105000 },
+    { id: 'B-2003', client: 'Ibrahim Saleh', unit: 'A-107', date: '21 Apr 2026', year: 2026, month: 0, price: 140000, recv: 70000 },
+    { id: 'B-1996', client: 'Grace Mwangi', unit: 'B-203', date: '9 Feb 2026', year: 2026, month: 0, price: 220000, recv: 110000 },
+    { id: 'B-1971', client: 'Ahmed Fawzi', unit: 'A-109', date: '15 Nov 2025', year: 2025, month: 0, price: 130000, recv: 130000 },
+    { id: 'B-1958', client: 'Julia Novak', unit: 'B-202', date: '28 Sep 2025', year: 2025, month: 0, price: 205000, recv: 205000 }
+  ];
+  const MILESTONES = [['Booking deposit', 10], ['SPA signing', 10], ['Construction 50%', 20], ['Construction 80%', 10], ['Handover', 50]];
+  const payments = [
+    { id: 'p1', unit: 'A-102', client: 'Fatima Al Hammadi', tower: 'Tower A', booking: 'B-2031', commission: 2300, status: 'booking' },
+    { id: 'p2', unit: 'A-106', client: 'Ravi Iyer', tower: 'Tower A', booking: 'B-2028', commission: 3600, status: 'spa' },
+    { id: 'p3', unit: 'B-201', client: 'Sophie Laurent', tower: 'Tower B', booking: 'B-2019', commission: 4600, status: 'spa' },
+    { id: 'p4', unit: 'A-108', client: 'Khalid Nasser', tower: 'Tower A', booking: 'B-2014', commission: 2500, status: 'submitted', ref: 'INV-0318', note: 'sent 15 Oct' },
+    { id: 'p5', unit: 'B-204', client: 'Anna Petrova', tower: 'Tower B', booking: 'B-2009', commission: 4200, status: 'rejected', ref: 'INV-0309', reason: 'The TRN on the invoice doesn’t match your registered VAT certificate.' },
+    { id: 'p6', unit: 'A-107', client: 'Ibrahim Saleh', tower: 'Tower A', booking: 'B-2003', commission: 2800, status: 'paid', paid: '18 Jun 2026' },
+    { id: 'p7', unit: 'B-203', client: 'Grace Mwangi', tower: 'Tower B', booking: 'B-1996', commission: 4400, status: 'paid', paid: '21 Apr 2026' },
+    { id: 'p8', unit: 'A-109', client: 'Ahmed Fawzi', tower: 'Tower A', booking: 'B-1971', commission: 2600, status: 'paid', paid: '12 Jan 2026' },
+    { id: 'p9', unit: 'B-202', client: 'Julia Novak', tower: 'Tower B', booking: 'B-1958', commission: 4100, status: 'paid', paid: '10 Dec 2025' }
+  ];
+  const PROJECTS = { 'Peace Heights': ['Tower A', 'Tower B'], 'Peace Gardens': ['Garden One'] };
+  const U = (u, tower, plan, beds, area, price, status) => ({ u, project: 'Peace Heights', tower, plan, beds, area, price, status });
+  const units = [
+    U('A-101', 'Tower A', '2 Bed Typical', '2', 1140, 110000, 'onhold'),
+    U('A-102', 'Tower A', 'Type A', '1', 760, 115000, 'sold'),
+    U('A-103', 'Tower A', 'Studio Typical', 'studio', 460, 120000, 'onhold'),
+    U('A-104', 'Tower A', 'Type B', '2', 1210, 200000, 'onhold'),
+    U('A-105', 'Tower A', 'Type C', '3', 1620, 250000, 'onhold'),
+    U('A-110', 'Tower A', '2 Bed Typical', '2', 1140, 110000, 'onhold'),
+    U('A-111', 'Tower A', '1 Bed Typical', '1', 780, 95000, 'available'),
+    U('A-113', 'Tower A', 'Studio Typical', 'studio', 460, 98000, 'available'),
+    U('A-114', 'Tower A', '2 Bed Typical', '2', 1140, 112000, 'available'),
+    U('A-116', 'Tower A', 'Type C', '3', 1620, 255000, 'available'),
+    U('A-117', 'Tower A', 'Type B', '2', 1210, 205000, 'available'),
+    U('B-201', 'Tower B', 'Type D', '3', 1580, 230000, 'sold'),
+    U('B-205', 'Tower B', '2 Bed Corner', '2', 1180, 215000, 'available'),
+    U('B-206', 'Tower B', '1 Bed Typical', '1', 790, 99000, 'available'),
+    U('B-207', 'Tower B', '2 Bed Corner', '2', 1180, 215000, 'onhold'),
+    U('B-210', 'Tower B', 'Studio Typical', 'studio', 470, 125000, 'available'),
+    U('B-211', 'Tower B', 'Type D', '3', 1650, 265000, 'available')
+  ];
+
+  /* ---------- Navigation ---------- */
+  const PAGES = ['home', 'pending', 'closed', 'payments', 'invoice', 'inventory', 'profile'];
+  const notif = $('#notif');
+  function showPage(tok, focus = true) {
+    const r = document.getElementById('t-' + tok);
+    if (!r) return;
+    r.checked = true;
+    window.scrollTo({ top: 0 });
+    notif.open = false;
+    if (focus) {
+      const h = $('#p-' + tok + ' h1');
+      if (h) { h.setAttribute('tabindex', '-1'); h.focus({ preventScroll: true }); }
+    }
+  }
+  $$('.tab-radio').forEach(r => r.addEventListener('change', () => { window.scrollTo({ top: 0 }); notif.open = false; }));
+  document.addEventListener('click', e => {
+    if (notif.open && !notif.contains(e.target)) notif.open = false;
+    const go = e.target.closest('[data-go]');
+    if (go) { e.preventDefault(); showPage(go.dataset.go); return; }
+    const inv = e.target.closest('[data-invoice]');
+    if (inv) { openInvoice(inv.dataset.invoice); return; }
+    const off = e.target.closest('[data-offer]');
+    if (off) { openOffer(off.dataset.offer); return; }
+    const fc = e.target.closest('[data-focus]');
+    if (fc) { const el = document.getElementById(fc.dataset.focus); if (el) { el.focus(); el.scrollIntoView({ block: 'center', behavior: 'smooth' }); } }
+  });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && notif.open) { notif.open = false; notif.querySelector('summary').focus(); } });
+
+  /* ---------- Toast ---------- */
+  let toastTimer;
+  function toast(msg, action) {
+    const t = $('#toast');
+    t.innerHTML = '<span>' + esc(msg) + '</span>' + (action ? '<button class="toast-btn" type="button" data-go="' + action.go + '">' + esc(action.label) + '</button>' : '');
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 5500);
+  }
+
+  /* ---------- Field errors ---------- */
+  function setErr(input, msg) {
+    const field = input.closest('.field');
+    const err = field && field.querySelector('.field-error');
+    if (msg) {
+      input.setAttribute('aria-invalid', 'true');
+      if (field) field.classList.add('has-error');
+      if (err) { err.textContent = msg; err.hidden = false; }
+    } else {
+      input.removeAttribute('aria-invalid');
+      if (field) field.classList.remove('has-error');
+      if (err) { err.textContent = ''; err.hidden = true; }
+    }
+    return !msg;
+  }
+  const emailOk = v => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
+
+  /* ---------- Pending deals ---------- */
+  function renderPending() {
+    $('#pending-body').innerHTML = pending.map(d => {
+      const s = STAGES[d.stage];
+      const track = [1, 2, 3, 4].map(i => '<i class="' + (i <= s.step ? 'on' : '') + '"></i>').join('');
+      return '<tr data-stage="' + d.stage + '">' +
+        '<td class="cell-primary" data-label="Client"><span class="cell-title">' + esc(d.name) + '</span><span class="cell-sub">' + esc(d.email) + '</span></td>' +
+        '<td data-label="Unit">' + d.unit + '</td>' +
+        '<td data-label="Stage"><span class="stage"><span class="stage-track" aria-hidden="true">' + track + '</span>' + s.label + '</span></td>' +
+        '<td data-label="Deal value" class="num">' + aed(d.value) + '</td>' +
+        '<td data-label="Updated">' + esc(d.updated) + '</td>' +
+        '<td data-label="Next step">' + s.next + '</td></tr>';
+    }).join('');
+    const counts = { all: pending.length, qualified: 0, offer: 0, cif: 0, kyc: 0 };
+    const values = { qualified: 0, offer: 0, cif: 0, kyc: 0 };
+    pending.forEach(d => { counts[d.stage]++; values[d.stage] += d.value; });
+    Object.keys(counts).forEach(k => $$('[data-count="' + k + '"]').forEach(el => el.textContent = counts[k]));
+    const total = pending.reduce((a, d) => a + d.value, 0);
+    $$('[data-bind="pipe-count"]').forEach(el => el.textContent = pending.length);
+    $$('[data-bind="pipe-value"]').forEach(el => el.textContent = aed(total));
+    const colors = { qualified: 'var(--s1)', offer: 'var(--s2)', cif: 'var(--s3)', kyc: 'var(--s4)' };
+    $('#stackbar').innerHTML = Object.keys(values).map(k => '<i style="width:' + (counts[k] / pending.length * 100) + '%;background:' + colors[k] + '"></i>').join('');
+    $('#stage-legend').innerHTML = Object.keys(values).map(k =>
+      '<li><span class="sw" style="background:' + colors[k] + '"></span><span>' + STAGES[k].label + '</span><span class="lv">' + counts[k] + ' deal' + (counts[k] === 1 ? '' : 's') + '<small>' + aed(values[k]) + '</small></span></li>').join('');
+  }
+
+  /* ---------- Closed deals ---------- */
+  function renderBookings() {
+    $('#bookings-list').innerHTML = bookings.map(b => {
+      const pct = Math.round(b.recv / b.price * 100);
+      let cum = 0, dueMarked = false;
+      const ms = MILESTONES.map(([name, p]) => {
+        cum += p;
+        let badge;
+        if (cum <= pct) badge = '<span class="badge is-ok">Paid</span>';
+        else if (!dueMarked) { dueMarked = true; badge = '<span class="badge is-warn">Next due</span>'; }
+        else badge = '<span class="badge is-neutral">Upcoming</span>';
+        return '<li class="ms"><span class="ms-name">' + name + '</span><span class="ms-meta">' + p + '% of price, ' + aed(b.price * p / 100) + '</span>' + badge + '</li>';
+      }).join('');
+      return '<details class="booking" data-year="' + b.year + '" data-month="' + b.month + '">' +
+        '<summary>' +
+          '<span class="b-id"><strong>' + b.id + '</strong><small>Booked ' + b.date + '</small></span>' +
+          '<span class="b-client">' + esc(b.client) + '</span>' +
+          '<span class="b-unit">' + b.unit + '</span>' +
+          '<span class="b-price num">' + aed(b.price) + '</span>' +
+          '<span class="b-recv num"><strong>' + aed(b.recv) + '</strong> <small>received of ' + aed(b.price) + '</small></span>' +
+          '<span class="b-prog"><span class="prog' + (pct >= 100 ? ' is-done' : '') + '" aria-hidden="true"><i style="width:' + pct + '%"></i></span><small>' + pct + '%</small></span>' +
+          '<span class="b-chev" aria-hidden="true"><svg class="ic ic-sm"><use href="#i-chev"/></svg></span>' +
+        '</summary>' +
+        '<div class="booking-body"><h3>Payment plan</h3><ul class="ms-list">' + ms + '</ul></div>' +
+      '</details>';
+    }).join('');
+  }
+
+  /* ---------- Payments ---------- */
+  const PST = { booking: ['Awaiting SPA', 'is-neutral'], spa: ['SPA signed', 'is-action'], submitted: ['Invoice in review', 'is-info'], rejected: ['Invoice returned', 'is-err'], paid: ['Paid', 'is-ok'] };
+  function payAction(p) {
+    switch (p.status) {
+      case 'spa': return '<button class="btn btn-sm btn-primary" type="button" data-invoice="' + p.id + '"><svg class="ic ic-sm"><use href="#i-upload"/></svg>Submit invoice</button>';
+      case 'rejected': return '<button class="btn btn-sm" type="button" data-invoice="' + p.id + '">Fix and resubmit</button>';
+      case 'submitted': return '<span class="muted-sm">' + p.ref + ', ' + p.note + '</span>';
+      case 'paid': return '<span class="muted-sm">Paid on ' + p.paid + '</span>';
+      default: return '<span class="muted-sm">Opens when the SPA is signed</span>';
+    }
+  }
+  function renderPayments() {
+    $('#pay-body').innerHTML = payments.map(p => {
+      const [label, cls] = PST[p.status];
+      return '<tr>' +
+        '<td class="cell-primary" data-label="Unit and client"><span class="cell-title">' + p.unit + '</span><span class="cell-sub">' + esc(p.client) + '</span></td>' +
+        '<td data-label="Project">Peace Heights, ' + p.tower + '</td>' +
+        '<td data-label="Booking">' + p.booking + '</td>' +
+        '<td data-label="Commission" class="num">' + aed(p.commission) + '</td>' +
+        '<td data-label="Status"><div><span class="badge ' + cls + '">' + label + '</span>' + (p.status === 'rejected' ? '<span class="reason">' + p.reason + '</span>' : '') + '</div></td>' +
+        '<td class="cell-action">' + payAction(p) + '</td></tr>';
+    }).join('');
+    updateMoney();
+  }
+  function updateMoney() {
+    const elig = payments.filter(p => p.status === 'spa');
+    const eligAmt = elig.reduce((a, p) => a + p.commission, 0);
+    const returned = payments.filter(p => p.status === 'rejected').length;
+    const review = payments.filter(p => p.status === 'submitted').reduce((a, p) => a + p.commission, 0);
+    $$('[data-bind="elig-amt"]').forEach(el => el.textContent = fmt(eligAmt));
+    $$('[data-bind="elig-count"]').forEach(el => el.textContent = elig.length + (elig.length === 1 ? ' deal' : ' deals'));
+    $$('[data-bind="review-amt"]').forEach(el => el.textContent = fmt(review));
+    $$('[data-bind="pay-actions"]').forEach(el => { el.textContent = elig.length + returned; el.hidden = !(elig.length + returned); });
+    const banner = $('#action-banner');
+    if (!elig.length && !returned) { banner.hidden = true; return; }
+    banner.hidden = false;
+    let txt = '';
+    if (elig.length) txt += '<strong>' + elig.length + (elig.length === 1 ? ' deal has' : ' deals have') + ' a signed SPA.</strong> Submit your invoice' + (elig.length === 1 ? '' : 's') + ' to release ' + aed(eligAmt) + ' in commission.';
+    if (returned) txt += (txt ? ' ' : '<strong>Action needed.</strong> ') + returned + ' returned invoice' + (returned === 1 ? ' also needs' : 's also need') + ' fixing.';
+    $('#banner-text').innerHTML = txt;
+  }
+
+  /* ---------- Invoice ---------- */
+  let current = null, invFile = null, invSeq = 0;
+  const ivForm = $('#ivc-form'), fileInput = $('#i-file');
+  function openInvoice(id) {
+    current = payments.find(p => p.id === id) || null;
+    prepareInvoice();
+    showPage('invoice');
+  }
+  function prepareInvoice() {
+    const has = !!current;
+    $('#ivc-empty').hidden = has;
+    $('#ivc-wrap').hidden = !has;
+    if (!has) return;
+    $('#ivc-success').hidden = true;
+    $('#ivc-form-area').hidden = false;
+    $('#sum-unit').textContent = current.unit;
+    $('#sum-client').textContent = current.client;
+    $('#sum-project').textContent = 'Peace Heights, ' + current.tower;
+    $('#sum-booking').textContent = current.booking;
+    $('#sum-comm').textContent = aed2(current.commission);
+    $('#sum-vat').textContent = aed2(current.commission * 0.05);
+    $('#sum-total').textContent = aed2(current.commission * 1.05);
+    const ret = current.status === 'rejected';
+    $('#ivc-returned').hidden = !ret;
+    if (ret) $('#ivc-returned-text').innerHTML = '<strong>' + current.ref + ' was returned.</strong> ' + current.reason + ' Check the TRN below, then upload a corrected invoice.';
+    ivForm.reset();
+    $('#i-date').max = iso(today);
+    $('#i-date').value = iso(today);
+    invFile = null; renderChip();
+    ['#i-no', '#i-date', '#i-amount', '#i-trn', '#i-dec'].forEach(s => setErr($(s), ''));
+    setErr(fileInput, '');
+    $('#ivc-errors').hidden = true;
+  }
+  function renderChip() {
+    const box = $('#file-chip');
+    if (!invFile) { box.innerHTML = ''; return; }
+    const size = invFile.size > 1048576 ? (invFile.size / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(invFile.size / 1024)) + ' KB';
+    box.innerHTML = '<div class="file-chip"><svg class="ic"><use href="#i-file"/></svg><div><p>' + esc(invFile.name) + '</p><small>' + size + ', ready to upload</small></div><button type="button" id="file-remove" aria-label="Remove ' + esc(invFile.name) + '">×</button></div>';
+    $('#file-remove').addEventListener('click', () => { invFile = null; fileInput.value = ''; renderChip(); fileInput.focus(); });
+  }
+  function checkFile(f) {
+    if (!f) return 'Attach your invoice as a PDF, PNG or JPG.';
+    const ext = (f.name.split('.').pop() || '').toLowerCase();
+    if (!['pdf', 'png', 'jpg', 'jpeg'].includes(ext)) return 'That’s a .' + ext + ' file. Upload a PDF, PNG or JPG instead.';
+    if (f.size > 5 * 1048576) return 'This file is ' + (f.size / 1048576).toFixed(1) + ' MB. The limit is 5 MB, so try saving it as a PDF.';
+    return '';
+  }
+  function takeFile(f) {
+    const msg = checkFile(f);
+    setErr(fileInput, msg);
+    invFile = msg ? null : f;
+    renderChip();
+  }
+  fileInput.addEventListener('change', () => takeFile(fileInput.files[0]));
+  const drop = $('#drop');
+  ['dragenter', 'dragover'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('is-drag'); }));
+  ['dragleave', 'drop'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove('is-drag'); }));
+  drop.addEventListener('drop', e => { const f = e.dataTransfer && e.dataTransfer.files[0]; if (f) takeFile(f); });
+
+  ivForm.addEventListener('submit', e => {
+    e.preventDefault();
+    if (!current) return;
+    const errs = [];
+    const no = $('#i-no'), dt = $('#i-date'), am = $('#i-amount'), trn = $('#i-trn'), dec = $('#i-dec');
+    const add = (el, msg) => { setErr(el, msg); if (msg) errs.push({ id: el.id, msg }); };
+    const nv = no.value.trim();
+    add(no, !nv ? 'Enter the invoice number from your invoice.' : (!/^[A-Za-z0-9\-\/]{3,24}$/.test(nv) ? 'Use letters, numbers, dashes or slashes only, for example HCR-2026-041.' : ''));
+    add(dt, !dt.value ? 'Enter the date printed on your invoice.' : (dt.value > iso(today) ? 'The invoice date can’t be in the future.' : ''));
+    const amt = parseFloat(am.value.replace(/[^0-9.]/g, ''));
+    add(am, !am.value.trim() ? 'Enter the invoice amount, excluding VAT.' : (Math.abs(amt - current.commission) > 0.009 ? 'Enter ' + aed2(current.commission) + ', the eligible commission for ' + current.booking + ' before VAT.' : ''));
+    const t = trn.value.replace(/\s/g, '');
+    add(trn, !t ? 'Enter your 15-digit TRN.' : (!/^\d{15}$/.test(t) ? 'Your TRN has ' + t.replace(/\D/g, '').length + ' digits. It needs exactly 15.' : ''));
+    add(fileInput, checkFile(invFile));
+    add(dec, dec.checked ? '' : 'Confirm the invoice is addressed to Peace Homes Development LLC.');
+    const box = $('#ivc-errors');
+    if (errs.length) {
+      $('#ivc-error-list').innerHTML = errs.map(x => '<li><button type="button" class="link" data-focus="' + x.id + '">' + esc(x.msg) + '</button></li>').join('');
+      box.hidden = false; box.focus(); box.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      return;
+    }
+    box.hidden = true;
+    current.status = 'submitted';
+    current.ref = 'INV-0' + (321 + invSeq++);
+    current.note = 'sent ' + today.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+    $('#ivc-success-text').textContent = 'We’ve received ' + current.ref + ' for ' + aed2(current.commission * 1.05) + ' on ' + current.booking + ' (' + current.unit + '). Finance usually reviews invoices within 3 business days, and you’ll get a notification when it’s approved.';
+    $('#ivc-form-area').hidden = true;
+    $('#ivc-success').hidden = false;
+    $('#ivc-success-h').focus();
+    renderPayments();
+    toast('Invoice submitted for ' + current.unit + '.');
+  });
+
+  /* ---------- Inventory ---------- */
+  const fProject = $('#f-project'), fTower = $('#f-tower'), fBeds = $('#f-beds'), fAvail = $('#f-avail');
+  const UST = { available: ['Available', 'is-ok'], onhold: ['On hold', 'is-warn'], sold: ['Sold', 'is-neutral'] };
+  const typeLabel = b => b === 'studio' ? 'Studio' : b + ' bedroom';
+  function fillTowers() { fTower.innerHTML = PROJECTS[fProject.value].map(t => '<option>' + t + '</option>').join(''); }
+  function renderInventory() {
+    const inTower = units.filter(x => x.project === fProject.value && x.tower === fTower.value);
+    const rank = { available: 0, onhold: 1, sold: 2 };
+    const list = inTower
+      .filter(x => (fBeds.value === 'all' || x.beds === fBeds.value) && (!fAvail.checked || x.status === 'available'))
+      .sort((a, c) => rank[a.status] - rank[c.status] || a.u.localeCompare(c.u));
+    $('#inv-body').innerHTML = list.map(x => {
+      const [label, cls] = UST[x.status];
+      const act = x.status === 'available'
+        ? '<button class="btn btn-sm btn-primary" type="button" data-offer="' + x.u + '">Generate offer</button>'
+        : '<span class="muted-sm">' + (x.status === 'onhold' ? 'Offer already active' : 'Booked') + '</span>';
+      return '<tr><td class="cell-primary" data-label="Unit"><span class="cell-title">' + x.u + '</span><span class="cell-sub">' + x.tower + ', ' + x.project + '</span></td>' +
+        '<td data-label="Floor plan">' + x.plan + '</td><td data-label="Type">' + typeLabel(x.beds) + '</td>' +
+        '<td data-label="Area" class="num">' + fmt(x.area) + ' sq ft</td>' +
+        '<td data-label="Price" class="num"><strong>' + aed(x.price) + '</strong></td>' +
+        '<td data-label="Status"><span class="badge ' + cls + '">' + label + '</span></td>' +
+        '<td class="cell-action">' + act + '</td></tr>';
+    }).join('');
+    const avail = inTower.filter(x => x.status === 'available').length;
+    $('#inv-count').innerHTML = inTower.length
+      ? 'Showing <strong>' + list.length + '</strong> of ' + inTower.length + ' units in ' + esc(fTower.value) + ', ' + avail + ' available'
+      : 'No units released in ' + esc(fTower.value);
+    $('#inv-table').hidden = list.length === 0;
+    $('#inv-empty-release').hidden = inTower.length !== 0;
+    $('#inv-empty-filter').hidden = !(inTower.length && !list.length);
+  }
+  fProject.addEventListener('change', () => { fillTowers(); renderInventory(); });
+  [fTower, fBeds, fAvail].forEach(el => el.addEventListener('change', renderInventory));
+  $('#reset-filters').addEventListener('click', () => { fBeds.value = 'all'; fAvail.checked = false; renderInventory(); });
+  $('#notify-btn').addEventListener('click', e => { e.currentTarget.disabled = true; e.currentTarget.textContent = 'You’ll be notified at launch'; toast('We’ll notify you when Garden One units are released.'); });
+
+  /* ---------- Sales offer dialog ---------- */
+  const dlg = $('#offer-dlg'), oForm = $('#offer-form');
+  let offerUnit = null;
+  function openOffer(code) {
+    offerUnit = units.find(x => x.u === code);
+    if (!offerUnit) return;
+    $('#offer-unit').textContent = offerUnit.u + ', ' + offerUnit.plan + ', ' + aed(offerUnit.price);
+    oForm.reset();
+    setErr($('#o-name'), ''); setErr($('#o-email'), '');
+    dlg.showModal();
+    $('#o-name').focus();
+  }
+  $('#offer-close').addEventListener('click', () => dlg.close());
+  $('#offer-cancel').addEventListener('click', () => dlg.close());
+  dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
+  oForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const n = $('#o-name'), m = $('#o-email');
+    const nOk = setErr(n, n.value.trim().length < 3 ? 'Enter the client’s full name as it appears on their passport.' : '');
+    const mv = m.value.trim();
+    const mOk = setErr(m, !mv ? 'Enter an email so the client receives the offer.' : (!emailOk(mv) ? 'This email looks incomplete. Check for a missing @ or domain, like name@mail.ae.' : ''));
+    if (!nOk) { n.focus(); return; }
+    if (!mOk) { m.focus(); return; }
+    pending.unshift({ name: n.value.trim(), email: mv, unit: offerUnit.u, stage: 'offer', value: offerUnit.price, updated: 'Just now' });
+    offerUnit.status = 'onhold';
+    dlg.close();
+    renderPending(); renderInventory();
+    toast('Sales offer for ' + offerUnit.u + ' sent to ' + n.value.trim() + '.', { label: 'View deal', go: 'pending' });
+  });
+
+  /* ---------- KYC ---------- */
+  function updateKyc() {
+    const rows = $$('#docs .doc');
+    const v = rows.filter(r => r.dataset.state === 'verified').length;
+    const rv = rows.filter(r => r.dataset.state === 'review').length;
+    const a = rows.filter(r => ['expiring', 'rejected', 'missing'].includes(r.dataset.state)).length;
+    let s = '<strong>' + v + ' of ' + rows.length + ' verified.</strong>';
+    if (rv) s += ' ' + rv + ' in review.';
+    s += a ? ' ' + a + (a === 1 ? ' document needs' : ' documents need') + ' action.' : ' Nothing else needed from you.';
+    $('#kyc-summary').innerHTML = s;
+    $('#kyc-bar').style.width = (v / rows.length * 100) + '%';
+  }
+  $$('#docs input[type=file]').forEach(inp => inp.addEventListener('change', () => {
+    const f = inp.files[0];
+    if (!f) return;
+    const row = inp.closest('.doc'), msg = row.querySelector('.doc-msg');
+    const bad = checkFile(f);
+    if (bad) { msg.textContent = bad; msg.className = 'doc-msg is-err'; msg.hidden = false; inp.value = ''; return; }
+    row.dataset.state = 'review';
+    const badge = row.querySelector('.badge');
+    badge.className = 'badge is-info'; badge.textContent = 'In review';
+    row.querySelector('.doc-meta').textContent = f.name + ', uploaded just now';
+    msg.textContent = 'Our compliance team usually verifies documents within 1 business day.';
+    msg.className = 'doc-msg'; msg.hidden = false;
+    updateKyc();
+    toast(row.querySelector('.doc-title').textContent + ' uploaded for review.');
+  }));
+
+  /* ---------- Profile edit ---------- */
+  $('#pd-form').addEventListener('submit', e => {
+    e.preventDefault();
+    const em = $('#pd-email'), ph = $('#pd-phone'), alt = $('#pd-alt');
+    const ok1 = setErr(em, !emailOk(em.value.trim()) ? 'Enter a valid email, like name@agency.ae.' : '');
+    const ok2 = setErr(ph, !/^\+?971\s?5\d(\s?\d){7}$/.test(ph.value.trim()) ? 'Enter a UAE mobile number, like +971 50 123 4567.' : '');
+    const av = alt.value.trim();
+    const ok3 = setErr(alt, av && !emailOk(av) ? 'This email looks incomplete. Leave it blank if you don’t have one.' : (av && av === em.value.trim() ? 'Use a different address from your main email.' : ''));
+    if (!(ok1 && ok2 && ok3)) { (!ok1 ? em : !ok2 ? ph : alt).focus(); return; }
+    $('[data-pd="email"]').textContent = em.value.trim();
+    $('[data-pd="phone"]').textContent = ph.value.trim();
+    $('[data-pd="alt"]').textContent = av || 'Not added';
+    $('#edit-profile').checked = false;
+    toast('Personal details saved.');
+  });
+
+  /* ---------- Theme ---------- */
+  /* Light theme only. */
+  try { localStorage.removeItem('peace-theme'); } catch (e) {}
+
+
+  /* ---------- Logo ---------- */
+  const B = window.BRAND || { logoSrc: 'https://peacehomesdevelopment.com/frontend/assets/images/resources/logo.png', name: 'Peace Homes', tagline: 'Development', showText: true };
+  const MARK = '<svg class="logo-mark" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="11" style="fill:var(--brand-navy)"/><path d="M9 21 20 11l11 10" style="fill:none;stroke:var(--brand-gold);stroke-width:3;stroke-linecap:round;stroke-linejoin:round"/><path d="M13 19.5V30h14V19.5" style="fill:none;stroke:#fff;stroke-width:2.4;stroke-linejoin:round"/><path d="M17.5 30v-5.5h5V30z" style="fill:var(--brand-primary)"/></svg>';
+  function renderLogo() {
+    const img = B.logoSrc ? '<img src="' + esc(B.logoSrc) + '" alt="' + esc(B.name) + '">' : MARK;
+    const text = B.showText ? '<span class="logo-text"><strong>' + esc(B.name) + '</strong><span>' + esc(B.tagline) + '</span></span>' : '';
+    $$('[data-logo]').forEach(el => {
+      // el.innerHTML = img + text;
+      el.innerHTML = '<img src="https://peacehomesdevelopment.com/frontend/assets/images/resources/logo.png">';
+      el.setAttribute('role', 'img');
+      el.setAttribute('aria-label', B.name + (B.tagline ? ' ' + B.tagline : ''));
+    });
+  }
+  renderLogo();
+
+  /* ---------- Brand settings panel ---------- */
+  const COLOR_FIELDS = [
+    ['Logo colours', [['--logo-bg', 'Logo background'], ['--logo-color', 'Logo text']]],
+    ['Brand colours', [['--brand-primary', 'Primary', 'Buttons, active states'], ['--brand-navy', 'Dark brand colour', 'Table headers, toasts'], ['--brand-navy-2', 'Gradient second colour'], ['--brand-gold', 'Highlight', 'Gold buttons and accents']]],
+    ['Surfaces', [['--page-bg', 'Page background'], ['--sidebar-bg', 'Sidebar (desktop)']]],
+    ['Section banners', [['--banner-home', 'Dashboard'], ['--banner-pending', 'Pending deals'], ['--banner-closed', 'Closed deals'], ['--banner-payments', 'Payments and invoice'], ['--banner-inventory', 'Inventory'], ['--banner-profile', 'Profile']]]
+  ];
+  const rootEl = document.documentElement;
+  const readVar = v => getComputedStyle(rootEl).getPropertyValue(v).trim();
+  const toHex = v => {
+    v = v.trim();
+    if (/^#[0-9a-f]{6}$/i.test(v)) return v.toUpperCase();
+    if (/^#[0-9a-f]{3}$/i.test(v)) return ('#' + v[1] + v[1] + v[2] + v[2] + v[3] + v[3]).toUpperCase();
+    return '#000000';
+  };
+  const DEFAULTS = {};
+  COLOR_FIELDS.forEach(([, f]) => f.forEach(([v]) => { DEFAULTS[v] = toHex(readVar(v)); }));
+  const DEFAULT_BRAND = { ...B };
+  const brandVals = { ...DEFAULTS };
+  const bsColors = $('#bs-colors');
+  bsColors.innerHTML = COLOR_FIELDS.map(([title, fields], gi) =>
+    (gi ? '</div><div class="bs-group">' : '') + '<h3>' + title + '</h3>' + fields.map(([v, label, sub]) =>
+      '<div class="bs-row"><label for="bs' + v + '">' + label + (sub ? '<small>' + sub + '</small>' : '') + '</label>' +
+      '<span class="bs-color"><code data-hex="' + v + '">' + DEFAULTS[v] + '</code><input type="color" id="bs' + v + '" data-var="' + v + '" value="' + DEFAULTS[v] + '"></span></div>').join('')
+  ).join('');
+  $$('#bs-colors input[type=color]').forEach(inp => inp.addEventListener('input', () => {
+    const v = inp.dataset.var;
+    brandVals[v] = inp.value.toUpperCase();
+    rootEl.style.setProperty(v, brandVals[v]);
+    $('[data-hex="' + v + '"]').textContent = brandVals[v];
+  }));
+  const bsDlg = $('#brand-dlg');
+  function syncBrandInputs() {
+    $('#bs-name').value = B.name; $('#bs-tag').value = B.tagline; $('#bs-show').checked = !!B.showText;
+  }
+  $('#brand-btn').addEventListener('click', () => { syncBrandInputs(); bsDlg.showModal(); });
+  $('#bs-close').addEventListener('click', () => bsDlg.close());
+  bsDlg.addEventListener('click', e => { if (e.target === bsDlg) bsDlg.close(); });
+  $('#bs-name').addEventListener('input', e => { B.name = e.target.value; renderLogo(); });
+  $('#bs-tag').addEventListener('input', e => { B.tagline = e.target.value; renderLogo(); });
+  $('#bs-show').addEventListener('change', e => { B.showText = e.target.checked; renderLogo(); });
+  $('#bs-logo').addEventListener('change', e => {
+    const f = e.target.files[0], err = $('#bs-logo-err');
+    if (!f) return;
+    if (!/^image\/(png|jpeg|svg\+xml|webp)$/.test(f.type)) { err.textContent = 'Upload a PNG, JPG, SVG or WebP image.'; err.hidden = false; return; }
+    if (f.size > 1024 * 1024) { err.textContent = 'This logo is ' + (f.size / 1048576).toFixed(1) + ' MB. Use an image under 1 MB so the HTML stays light.'; err.hidden = false; return; }
+    err.hidden = true;
+    const r = new FileReader();
+    r.onload = () => { B.logoSrc = r.result; renderLogo(); };
+    r.readAsDataURL(f);
+    e.target.value = '';
+  });
+  $('#bs-logo-clear').addEventListener('click', () => { B.logoSrc = ''; renderLogo(); });
+
+  function settingsCSS() {
+    const keep = readVar('--logo-height') || '36px';
+    const fonts = ['--font-heading', '--font-text'].map(v => '  ' + v + ':' + readVar(v) + ';').join('\n');
+    const lines = COLOR_FIELDS.map(([title, fields]) => '\n  /* ' + title + ' */\n' + fields.map(([v]) => '  ' + v + ':' + brandVals[v] + ';').join('\n')).join('\n');
+    return ':root{' + lines + '\n  --logo-height:' + keep + ';\n\n  /* Fonts */\n' + fonts + '\n}';
+  }
+  $('#bs-copy').addEventListener('click', async () => {
+    const text = settingsCSS();
+    try { await navigator.clipboard.writeText(text); toast('Settings CSS copied. Paste it over the BRAND SETTINGS block.'); }
+    catch (e) {
+      const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); toast('Settings CSS copied.'); } catch (x) { toast('Copy isn’t available here. Use Download instead.'); }
+      ta.remove();
+    }
+  });
+  $('#bs-download').addEventListener('click', () => {
+    const S1 = '/*' + 'BRAND-SETTINGS-START' + '*/', S2 = '/*' + 'BRAND-SETTINGS-END' + '*/';
+    const C1 = '/*' + 'BRAND-CONFIG-START' + '*/', C2 = '/*' + 'BRAND-CONFIG-END' + '*/';
+    let out = ORIGINAL_HTML;
+    const a1 = out.indexOf(S1), a2 = out.indexOf(S2);
+    if (a1 > -1 && a2 > a1) out = out.slice(0, a1 + S1.length) + '\n' + settingsCSS() + '\n' + out.slice(a2);
+    const b1 = out.indexOf(C1), b2 = out.indexOf(C2);
+    const cfg = { logoSrc: B.logoSrc, name: B.name, tagline: B.tagline, showText: !!B.showText };
+    if (b1 > -1 && b2 > b1) out = out.slice(0, b1 + C1.length) + '\nwindow.BRAND = ' + JSON.stringify(cfg, null, 2) + ';\n' + out.slice(b2);
+    try {
+      const url = URL.createObjectURL(new Blob([out], { type: 'text/html' }));
+      const link = document.createElement('a');
+      link.href = url; link.download = 'peace-homes-portal.html';
+      document.body.appendChild(link); link.click(); link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 2000);
+      toast('Downloaded peace-homes-portal.html with your settings.');
+    } catch (e) { toast('Download isn’t available here. Use Copy settings CSS instead.'); }
+  });
+  $('#bs-reset').addEventListener('click', () => {
+    Object.keys(DEFAULTS).forEach(v => { rootEl.style.removeProperty(v); brandVals[v] = DEFAULTS[v]; const inp = document.getElementById('bs' + v); if (inp) inp.value = DEFAULTS[v]; $('[data-hex="' + v + '"]').textContent = DEFAULTS[v]; });
+    Object.assign(B, DEFAULT_BRAND); syncBrandInputs(); renderLogo();
+    toast('Brand settings reset.');
+  });
+
+  /* ---------- Init ---------- */
+  $('#today-label').textContent = today.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  const hr = today.getHours();
+  $('#h-home').textContent = (hr < 12 ? 'Good morning' : hr < 18 ? 'Good afternoon' : 'Good evening') + ', Rana';
+  renderPending(); renderBookings(); renderPayments();
+  fillTowers(); renderInventory(); updateKyc(); prepareInvoice();
+  const tok = (location.hash || '').slice(1);
+  if (PAGES.includes(tok)) showPage(tok, false);
+})();
+</script>
+</body>
+</html>
